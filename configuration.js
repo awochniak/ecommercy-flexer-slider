@@ -188,7 +188,7 @@ function setupMobileMenu() {
 function appendSwipeableMobileMenu() {
   var div = document.createElement("div");
   div.classList.add("swipeable-mobile-menu")
-  div.appendChild(createHTMLTree(frontAPI.getCategories(), 0, "Wróć do sklepu", "Kategorie"))
+  div.appendChild(createHTMLTree(frontAPI.getCategories(), 0, templateConfiguration.backToShop, templateConfiguration.mobileMenuTitle))
 
   document.body.appendChild(div);
 
