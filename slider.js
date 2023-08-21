@@ -12,7 +12,7 @@ function initializeSlider(config) {
 
   const getSliderWidth = () => {
     const windowRange = getWindowSize();
-    return windowRange.slider_width;
+    return windowRange?.slider_width || 0;
   };
 
   const updateVisibleItems = () => {
