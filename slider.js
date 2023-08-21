@@ -47,8 +47,9 @@ function initializeSlider(config) {
   };
 
   const handleArrowClick = (direction) => {
-    const itemsCount = sliderContent.find('.product-item').length;
-    const maxVisibleItems = Math.floor(window.innerWidth / (config.item_width + 20));
+    itemsCount = sliderContent.find('.product-item').length;
+    maxVisibleItems = Math.floor(window.innerWidth / (config.item_width + 20));
+    console.log("Arek " + direction + " - " + itemsCount + "  " + maxVisibleItems)  
 
     if (direction === 'left' && currentIndex > 0) {
       currentIndex--;
