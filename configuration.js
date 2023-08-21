@@ -1,6 +1,7 @@
 function initializeConfiguration() {
   setupCart()
   setupMegamenu()
+  setupMobileMenu()
   setupExtraMessages();
   setupCombinedOffersAndNewProducts();
   setupProductsSliders()
@@ -19,8 +20,6 @@ function initializeConfiguration() {
   handleSearchOnMobile();
   handleLogoutOnClick();
   handleMobileMenu();
-
-  setupSwipeableMenu()
 }
 
 function setupCart() {
@@ -162,6 +161,23 @@ function replacePlaceholders(content, data) {
     }
   }
   return content
+}
+
+function setupMobileMenu() {
+  const variant = templateConfiguration.mobileMenuType
+  console.info(`Selected mobile menu type: ${variant}`)
+
+  switch (variant) {
+    case "horizontal":
+      appendMenu();
+      break;
+
+    case "vertical":
+      break;
+
+    default:
+      console.warn(`Invalid mobile menu type variant: "${variant}". The variant was not applied.`)
+  }
 }
 
 function setupExtraMessages() {
@@ -544,11 +560,6 @@ function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer,
 
   const basketContainer = document.querySelector(".basket-site-cart");
   basketContainer.style.cssText = isBasketContainer ? "display: block !important;" : "display: none !important;";
-}
-
-function setupSwipeableMenu() {
-  if (!templateConfiguration.isMobileMenuSwipeable) return
-  $(".fa-align-justify").on("click", () => setTimeout(() => $("#rwd-menu").addClass("swipeable"), 100))
 }
 
 const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
