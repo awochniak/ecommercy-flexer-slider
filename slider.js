@@ -1,5 +1,5 @@
 function initializeSlider(config) {
-  console.log("Init slider for config" + config)
+  console.log("Init slider for config" + config.slider_id)
   const sliderWrapper = $(config.slider_id + ' .product-slider');
   const slider = $(config.slider_id + ' .slider-content');
   const sliderControls = $(config.slider_id + ' .slider-controls');
