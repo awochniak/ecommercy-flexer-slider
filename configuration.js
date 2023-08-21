@@ -165,6 +165,8 @@ function replacePlaceholders(content, data) {
 }
 
 function setupExtraMessages() {
+  let currentShownExtraMessageIndex = 0;
+
   $(".next-message").on("click", function () {
     currentShownExtraMessageIndex = (currentShownExtraMessageIndex + 1) % $(".extra-message").length
     $(".extra-message").css("display", "none").eq(currentShownExtraMessageIndex).css("display", "block")
