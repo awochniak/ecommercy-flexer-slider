@@ -1,12 +1,15 @@
 function initializeSlider(config) {
-  const sliderWrapper = $('.product-slider');
-  const slider = $('.slider-content');
-  const sliderControls = $('.slider-controls');
+  const sliderWrapper = $(config.slider_id);
+  const sliderContent = sliderWrapper.find('.product-slider .slider-wrapper .slider-content');
+  const sliderControls = sliderWrapper.find('.product-slider .slider-controls');
   let currentIndex = 0;
 
   const getWindowSize = () => {
     const screenWidth = window.innerWidth;
-    return config.slider_width_ranges.find(range => screenWidth >= range.range[0] && screenWidth <= range.range[1]);
+    return config.slider_width_ranges.find(
+      (range) =>
+        screenWidth >= range.range[0] && screenWidth <= range.range[1]
+    );
   };
 
   const getSliderWidth = () => {
@@ -15,36 +18,36 @@ function initializeSlider(config) {
   };
 
   const updateVisibleItems = () => {
-    updateSliderControls()
-    slider.css('transform', `translateX(${config.slider_offset * -currentIndex}px)`);
+    updateSliderControls();
+    sliderContent.css('transform', `translateX(${config.slider_offset * -currentIndex}px)`);
   };
 
   const updateSliderControls = () => {
     const sliderWidth = getSliderWidth();
     const maxItemWidth = config.item_width;
     const maxVisibleItems = Math.floor(sliderWidth / (maxItemWidth + 20));
-    const itemsCount = $(config.slider_id + ' .product-item').length;
+    const itemsCount = sliderContent.find('.product-item').length;
 
     if (currentIndex === itemsCount - maxVisibleItems) {
-      $('.slider-control.right').css('display', 'none');
+      sliderControls.find('.slider-control.right').css('display', 'none');
     } else {
-      $('.slider-control.right').css('display', 'block');
+      sliderControls.find('.slider-control.right').css('display', 'block');
     }
 
     if (currentIndex === 0) {
-      $('.slider-control.left').css('display', 'none');
+      sliderControls.find('.slider-control.left').css('display', 'none');
     } else {
-      $('.slider-control.left').css('display', 'block');
+      sliderControls.find('.slider-control.left').css('display', 'block');
     }
-  }
+  };
 
   const updateSliderWidth = () => {
     const sliderWidth = getSliderWidth();
     sliderWrapper.css('max-width', `${sliderWidth}px`);
-  }
+  };
 
   const handleArrowClick = (direction) => {
-    const itemsCount = $('.product-item').length;
+    const itemsCount = sliderContent.find('.product-item').length;
     const maxVisibleItems = Math.floor(window.innerWidth / (config.item_width + 20));
 
     if (direction === 'left' && currentIndex > 0) {
@@ -56,23 +59,23 @@ function initializeSlider(config) {
     updateVisibleItems();
   };
 
-  $('.slider-control.left').click(() => handleArrowClick('left'));
-  $('.slider-control.right').click(() => handleArrowClick('right'));
+  sliderControls.find('.slider-control.left').click(() => handleArrowClick('left'));
+  sliderControls.find('.slider-control.right').click(() => handleArrowClick('right'));
 
   let touchStartX = 0;
   let touchEndX = 0;
 
-  slider.on('touchstart', function (e) {
+  sliderContent.on('touchstart', function (e) {
     touchStartX = e.touches[0].clientX;
   });
 
-  slider.on('touchend', function (e) {
+  sliderContent.on('touchend', function (e) {
     touchEndX = e.changedTouches[0].clientX;
     const touchDiff = touchStartX - touchEndX;
 
     if (touchDiff > 50 && currentIndex > 0) {
       currentIndex--;
-    } else if (touchDiff < -50 && currentIndex < $('.product-item').length - 1) {
+    } else if (touchDiff < -50 && currentIndex < sliderContent.find('.product-item').length - 1) {
       currentIndex++;
     }
 
