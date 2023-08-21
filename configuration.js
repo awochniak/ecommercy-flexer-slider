@@ -169,7 +169,7 @@ function setupMobileMenu() {
 
   switch (variant) {
     case "horizontal":
-      appendMenu();
+      appendSwipeableMobileMenu();
       $(".fa-align-justify").off();
       $(".fa-align-justify").on("click", function(e) {
         e.preventDefault()
@@ -183,6 +183,79 @@ function setupMobileMenu() {
     default:
       console.warn(`Invalid mobile menu type variant: "${variant}". The variant was not applied.`)
   }
+}
+
+function appendSwipeableMobileMenu() {
+  var div = document.createElement("div");
+  div.classList.add("swipeable-mobile-menu")
+  div.appendChild(createHTMLTree(frontAPI.getCategories(), 0, "Wróć do sklepu", "Kategorie"))
+
+  document.body.appendChild(div);
+
+  let currentLevel = 0;
+  const mobileMenu = $(".swipeable-mobile-menu");
+
+  $(".mobile-menu-back").on("click", function (e) {
+    if (currentLevel === 0) {
+      mobileMenu.hide()
+      return
+    }
+
+    currentLevel--;
+    const currentMenu = $(this).parent();
+    mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
+    currentMenu.css("display", "none");
+  });
+
+  $(".mobile-menu-item").on("click", function (e) {
+    const pixelsFromRight = 30;
+    const clickX = e.clientX - $(this).offset().left;
+
+    if (clickX >= ($(this).width() - pixelsFromRight) && $(this).siblings().length > 0) {
+      currentLevel++;
+      e.preventDefault();
+      const nextMenu = $(this).parent().find(">ul");
+      nextMenu.css("display", "block");
+      mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
+    }
+  });
+}
+
+function createHTMLTree(categories, level, buttonText, h1Text) {
+  var ul = document.createElement("ul");
+  ul.classList.add(`mobile-level-${level}`);
+
+  // Create an h1 element
+  var h1 = document.createElement("h1");
+  h1.textContent = h1Text;
+
+  // Create a button element
+  var button = document.createElement("button");
+  button.classList = "mobile-menu-back"
+  button.textContent = buttonText;
+
+  ul.appendChild(button);
+  ul.appendChild(h1);
+
+  categories.forEach(category => {
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+
+    a.href = `/pl/c/${category.name}/${category.id}`;
+    a.textContent = category.name;
+    a.classList = "mobile-menu-item"
+
+    li.appendChild(a);
+
+    if (category.children.length > 0) {
+      var subTree = createHTMLTree(category.children, level + 1, h1Text, category.name);
+      li.appendChild(subTree);
+    }
+
+    ul.appendChild(li);
+  });
+
+  return ul;
 }
 
 function setupExtraMessages() {
