@@ -1,3 +1,28 @@
+function initializeConfiguration() {
+  setupCart()
+  setupMegamenu()
+  setupExtraMessages();
+  setupCombinedOffersAndNewProducts();
+  setupProductsSliders()
+  setupSEOs();
+  setupItemCountModifiers();
+
+  setupSiteCartActionListeners();
+  setupViewSelectHandlers();
+  setupProductInfoPager();
+  setupProductMainImage();
+
+  changePhotoOnHover();
+  setupMenuExpander();
+  setIconsOnChildfulMenuItems();
+
+  handleSearchOnMobile();
+  handleLogoutOnClick();
+  handleMobileMenu();
+
+  setupSwipeableMenu()
+}
+
 function setupCart() {
   const variant = templateConfiguration.cartType
   console.info(`Selected cart type: ${variant}`)
