@@ -27,15 +27,15 @@ function initializeSlider(config) {
     const itemsCount = $(config.slider_id + ' .product-item').length;
 
     if (currentIndex === itemsCount - maxVisibleItems) {
-      $('.slider-control.right').css('display', 'none');
+      $(config.slider_id + ' .slider-control.right').css('display', 'none');
     } else {
-      $('.slider-control.right').css('display', 'block');
+      $(config.slider_id + ' .slider-control.right').css('display', 'block');
     }
 
     if (currentIndex === 0) {
-      $('.slider-control.left').css('display', 'none');
+      $(config.slider_id + ' .slider-control.left').css('display', 'none');
     } else {
-      $('.slider-control.left').css('display', 'block');
+      $(config.slider_id + ' .slider-control.left').css('display', 'block');
     }
   }
 
@@ -45,7 +45,7 @@ function initializeSlider(config) {
   }
 
   const handleArrowClick = (direction) => {
-    const itemsCount = $('.product-item').length;
+    const itemsCount = $(config.slider_id + ' .product-item').length;
     const maxVisibleItems = Math.floor(window.innerWidth / (config.item_width + 20));
 
     if (direction === 'left' && currentIndex > 0) {
@@ -57,8 +57,8 @@ function initializeSlider(config) {
     updateVisibleItems();
   };
 
-  $('.slider-control.left').click(() => handleArrowClick('left'));
-  $('.slider-control.right').click(() => handleArrowClick('right'));
+  $(config.slider_id + ' .slider-control.left').click(() => handleArrowClick('left'));
+  $(config.slider_id + ' .slider-control.right').click(() => handleArrowClick('right'));
 
   let touchStartX = 0;
   let touchEndX = 0;
