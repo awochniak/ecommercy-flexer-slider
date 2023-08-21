@@ -47,7 +47,7 @@ function initializeSlider(config) {
 
   const handleArrowClick = (direction) => {
     const itemsCount = $(config.slider_id + ' .product-item').length;
-    const maxVisibleItems = Math.floor(window.innerWidth / (config.item_width + 20));
+    const maxVisibleItems = Math.floor(getSliderWidth() / (config.item_width + 20));
 
     if (direction === 'left' && currentIndex > 0) {
       currentIndex--;
