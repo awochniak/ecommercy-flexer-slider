@@ -170,6 +170,11 @@ function setupMobileMenu() {
   switch (variant) {
     case "horizontal":
       appendMenu();
+      $(".fa-align-justify").off();
+      $(".fa-align-justify").on("click", function(e) {
+        e.preventDefault()
+        $(".swipeable-mobile-menu").toggle()
+      })
       break;
 
     case "vertical":
