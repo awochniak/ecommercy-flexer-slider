@@ -1,16 +1,4 @@
-const config = {
-  slider_id: "#box_specialoffer",
-  item_width: 208,
-  slider_offset: 265, // Sum of item width with spacing and gap between elements
-  slider_width_ranges: [
-    { range: [0, 979], slider_width: 240 },       // Mobile
-    { range: [980, 1199], slider_width: 770 },   // Desktop Small
-    { range: [1200, 1679], slider_width: 1035 },  // Desktop Medium
-    { range: [1680, Infinity], slider_width: 1300 } // Desktop Large and above
-  ]
-};
-
-$(document).ready(function () {
+function initializeSlider(config) {
   const sliderWrapper = $('.product-slider');
   const slider = $('.slider-content');
   const sliderControls = $('.slider-controls');
@@ -26,7 +14,6 @@ $(document).ready(function () {
     return windowRange.slider_width;
   };
 
-  // Replace the existing updateVisibleItems function with this updated one
   const updateVisibleItems = () => {
     updateSliderControls()
     slider.css('transform', `translateX(${config.slider_offset * -currentIndex}px)`);
@@ -39,18 +26,14 @@ $(document).ready(function () {
     const itemsCount = $(config.slider_id + ' .product-item').length;
 
     if (currentIndex === itemsCount - maxVisibleItems) {
-      // Hide the right slider control when at the end
       $('.slider-control.right').css('display', 'none');
     } else {
-      // Show the right slider control otherwise
       $('.slider-control.right').css('display', 'block');
     }
 
     if (currentIndex === 0) {
-      // Hide the right slider control when at the end
       $('.slider-control.left').css('display', 'none');
     } else {
-      // Show the right slider control otherwise
       $('.slider-control.left').css('display', 'block');
     }
   }
@@ -96,14 +79,12 @@ $(document).ready(function () {
     updateVisibleItems();
   });
 
-  // Initial update of visible items
   updateVisibleItems();
   updateSliderWidth();
   updateSliderControls();
 
-  // Update max-width on window resize
   $(window).resize(() => {
     updateSliderWidth();
     updateSliderControls();
   });
-});
+}
