@@ -7,7 +7,8 @@ function initializeSlider(config) {
 
   const getWindowSize = () => {
     const screenWidth = window.innerWidth;
-    return config.slider_width_ranges.find(range => screenWidth >= range.range[0] && screenWidth <= range.range[1]);
+    const windowSize = config.slider_width_ranges.find(range => screenWidth >= range.range[0] && screenWidth <= range.range[1]);
+    return windowSize
   };
 
   const getSliderWidth = () => {
