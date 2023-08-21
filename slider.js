@@ -1,7 +1,7 @@
 function initializeSlider(config) {
-  const sliderWrapper = $('.product-slider');
-  const slider = $('.slider-content');
-  const sliderControls = $('.slider-controls');
+  const sliderWrapper = $(config.slider_id + ' .product-slider');
+  const slider = $(config.slider_id + ' .slider-content');
+  const sliderControls = $(config.slider_id + ' .slider-controls');
   let currentIndex = 0;
 
   const getWindowSize = () => {
