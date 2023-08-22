@@ -4,7 +4,6 @@ function initializeConfiguration() {
   setupMobileMenu()
   setupExtraMessages();
   setupCombinedOffersAndNewProducts();
-  setupProductsSliders()
   setupSEOs();
   setupItemCountModifiers();
 
@@ -280,44 +279,6 @@ function setupCombinedOffersAndNewProducts() {
     .append($("#box_lastadded"));
 
   $(".main.row .centercol").prepend(targetContainer);
-}
-
-function setupProductsSliders() {
-  setupProductSlider("#box_lastadded", 3);
-  setupProductSlider("#box_productoftheday", 1);
-  setupProductSlider(".productoftheday_menu", 1);
-  setupProductSlider("#box_specialoffer", 4);
-  setupProductSlider(".product-related", 5);
-}
-
-function setupProductSlider(name, visibleItems) {
-  $(name + " .slider-wrap").each(function () {
-    const sliderWrap = $(this);
-    const childrenCount = sliderWrap.children().length;
-    const container = sliderWrap.closest('.slider-container');
-    const navRight = container.find(".slider-nav-right");
-    const navLeft = container.find(".slider-nav-left");
-
-    navRight.toggle(childrenCount > visibleItems);
-    navLeft.css("pointer-events", "none");
-
-    let currentIndex = 0;
-
-    navRight.on("click", () => {
-      currentIndex = Math.min(currentIndex + 1, childrenCount - visibleItems);
-      updateNavButtons();
-    });
-
-    navLeft.on("click", () => {
-      currentIndex = Math.max(currentIndex - 1, 0);
-      updateNavButtons();
-    });
-
-    function updateNavButtons() {
-      navRight.toggle(currentIndex < childrenCount - visibleItems);
-      navLeft.toggle(currentIndex > 0);
-    }
-  });
 }
 
 function setupSEOs() {
