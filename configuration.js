@@ -615,7 +615,7 @@ function handleMobileMenu() {
 
   const backButton = document.querySelector(".mobile-menu-items > button");
   const menuItems = document.querySelectorAll(".mobile-menu-items >div");
-
+  
   backButton.addEventListener("click", () => {
     mobileMenu.style.display = "none";
     const searchContainer = document.querySelector(".search__container");
@@ -623,6 +623,13 @@ function handleMobileMenu() {
     $(".mobile-items-background").hide();
   });
 
+  $(".basket-site-cart button").on(click, function() {
+    mobileMenu.style.display = "none";
+    const searchContainer = document.querySelector(".search__container");
+    searchContainer.style.display = "none";
+    $(".mobile-items-background").hide();
+  })
+  
   contact.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-contact", false, false));
   search.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-search", true, false));
   account.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-profile", false, false));
