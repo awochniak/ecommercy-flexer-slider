@@ -19,6 +19,7 @@ function initializeConfiguration() {
   handleSearchOnMobile();
   handleLogoutOnClick();
   handleMobileMenu();
+  handleBackgroundOnMobileMenuClick();
 }
 
 function setupCart() {
@@ -612,6 +613,19 @@ function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer,
 
   const basketContainer = document.querySelector(".basket-site-cart");
   basketContainer.style.cssText = isBasketContainer ? "display: block !important;" : "display: none !important;";
+}
+
+function handleBackgroundOnMobileMenuClick() {
+  $(".fa-align-justify").on('click', function () {
+    const mobileMenu = document.querySelector(".mobile-menu-items");
+    if (mobileMenu.style.display == "block") {
+      document.querySelector(".search__container").style.display = "none";
+      document.querySelector(".basket-site-cart").style.cssText = "display: none !important;";
+      mobileMenu.style.display = "none";
+      $(".mobile-items-background").hide();
+    }
+    $(".mobile-items-background").toggle();
+  })
 }
 
 const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
