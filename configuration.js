@@ -204,6 +204,7 @@ function appendSwipeableMobileMenu() {
     const currentMenu = $(this).parent();
     mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
     currentMenu.css("display", "none");
+    $(".mobile-items-background").hide();
   });
 
   $(".mobile-menu-item").on("click", function (e) {
