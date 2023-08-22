@@ -586,8 +586,8 @@ function handleMobileMenu() {
 
   $(".basket-site-cart button").on('click', function() {
     mobileMenu.style.display = "none";
-    const searchContainer = document.querySelector(".search__container");
-    searchContainer.style.display = "none";
+    const basketContainer = document.querySelector(".basket-site-cart");
+    basketContainer.style.cssText =  "display: block !important;";
     $(".mobile-items-background").hide();
   })
   
