@@ -623,7 +623,7 @@ function handleMobileMenu() {
     $(".mobile-items-background").hide();
   });
 
-  $(".basket-site-cart button").on(click, function() {
+  $(".basket-site-cart button").on('click', function() {
     mobileMenu.style.display = "none";
     const searchContainer = document.querySelector(".search__container");
     searchContainer.style.display = "none";
