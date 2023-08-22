@@ -600,6 +600,8 @@ function handleMobileMenu() {
 
 function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer, isBasketContainer) {
   $(".mobile-items-background").show();
+  $("#rwd-menu").hide();
+  $(".swipeable-mobile-menu").hide();
   
   mobileMenu.style.display = "block";
   Array.from(menuItems).forEach((element) => { element.style.display = "none"; });
