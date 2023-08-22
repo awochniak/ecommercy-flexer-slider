@@ -620,6 +620,7 @@ function handleMobileMenu() {
     mobileMenu.style.display = "none";
     const searchContainer = document.querySelector(".search__container");
     searchContainer.style.display = "none";
+    $(".mobile-items-background").hide();
   });
 
   contact.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-contact", false, false));
@@ -629,6 +630,8 @@ function handleMobileMenu() {
 }
 
 function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer, isBasketContainer) {
+  $(".mobile-items-background").show();
+  
   mobileMenu.style.display = "block";
   Array.from(menuItems).forEach((element) => { element.style.display = "none"; });
   document.querySelector(selector).style.display = "flex";
