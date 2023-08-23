@@ -45,7 +45,6 @@ function initializeSlider(config) {
     currentIndex = 0;
     slider.css('transform', `translateX(0)`);
     sliderWrapper.css('max-width', `${sliderWidth}px`);
-    updateSliderControls();
   }
 
   const handleArrowClick = (direction) => {
