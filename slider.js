@@ -132,6 +132,10 @@ function initializeSlider(config) {
     }
   });
 
+  // Call scrollToFirstItemFromArray after initializing
+  scrollToFirstItemFromArray();
+
+  // Initialize the slider
   updateVisibleItems();
   updateSliderWidth();
   updateSliderControls();
