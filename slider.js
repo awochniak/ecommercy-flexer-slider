@@ -23,7 +23,6 @@ function initializeSlider(config) {
   
   const getSliderWidth = () => {
     const windowRange = getWindowSize();
-    console.log(windowRange.slider_width)
     return windowRange.slider_width;
   };
 
@@ -53,7 +52,10 @@ function initializeSlider(config) {
 
   const updateSliderWidth = () => {
     const sliderWidth = getSliderWidth();
+    currentIndex = 0;
+    slider.css('transform', `translateX(0)`);
     sliderWrapper.css('max-width', `${sliderWidth}px`);
+    updateSliderControls();
   }
 
   const handleArrowClick = (direction) => {
