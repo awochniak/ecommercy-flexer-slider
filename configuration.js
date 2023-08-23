@@ -354,7 +354,7 @@ function setupSiteCartActionListeners() {
   const menu = $(".menu").get(0);
   const basket = $(".basket.right").get(0);
 
-  if (!siteBasket) return;
+  if (!siteBasket && templateConfiguration.cartType != "site-cart") return;
 
   const siteBasketOffset = window.getComputedStyle(siteBasket).getPropertyValue("right");
 
