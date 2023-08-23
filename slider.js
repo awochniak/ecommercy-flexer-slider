@@ -10,16 +10,6 @@ function initializeSlider(config) {
     const windowSize = config.slider_width_ranges.find(range => screenWidth >= range.range[0] && screenWidth <= range.range[1]);
     return windowSize
   };
-
-  const scrollToLastItem = () => {
-    const maxVisibleItems = Math.floor(getSliderWidth() / (config.item_width + 20));
-    const itemsCount = $(config.slider_id + ' .product-item').length;
-
-    if (itemsCount > maxVisibleItems) {
-      currentIndex = itemsCount - maxVisibleItems;
-      updateVisibleItems();
-    }
-  };
   
   const getSliderWidth = () => {
     const windowRange = getWindowSize();
@@ -81,6 +71,5 @@ function initializeSlider(config) {
   $(window).resize(() => {
     updateSliderWidth();
     updateSliderControls();
-    scrollToLastItem();
   });
 }
