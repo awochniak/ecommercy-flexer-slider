@@ -23,6 +23,7 @@ function initializeSlider(config) {
   
   const getSliderWidth = () => {
     const windowRange = getWindowSize();
+    console.log(windowRange.slider_width)
     return windowRange.slider_width;
   };
 
