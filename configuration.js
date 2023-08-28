@@ -24,6 +24,8 @@ function initializeConfiguration() {
   handleProductContainerPosition();
   handleMobileFilterButton();
   initProductHover();
+
+  appendProductCountOnFooterMenu()
 }
 
 function setupCart() {
@@ -733,6 +735,18 @@ function initProductHover() {
   $(".product-inner-wrapper .boximgsize").on("mouseleave", function () {
     $(this).find(">div").hide();
   });
+}
+
+function appendProductCountOnFooterMenu() {
+  const maxCountVisible = templateConfiguration.maxCountVisible;
+  const basket = frontAPI.getBasketInfo({});
+  const productCount = basket.products.reduce((total, product) => total + product.quantity, 0);
+  const productCountText = productCount > maxCountVisible ? maxCountVisible+"+" : productCount.toString();
+
+  if (productCount > 0) {
+    $(".counts-product-footer").text(productCountText)
+    $(".counts-product-footer").show()
+  }
 }
 
 const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
