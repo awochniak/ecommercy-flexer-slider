@@ -25,7 +25,7 @@ function initializeSlider(config) {
     const sliderWidth = getSliderWidth();
     const maxItemWidth = config.item_width;
     const maxVisibleItems = Math.floor(sliderWidth / (maxItemWidth + 20));
-    const itemsCount = $(config.slider_id + ' .product-item').length;
+    const itemsCount = $(config.slider_id + ' .product-item').length / $(config.slider_id).length;
 
     if (currentIndex === itemsCount - maxVisibleItems) {
       $(config.slider_id + ' .slider-control.right').css('display', 'none');
@@ -48,7 +48,7 @@ function initializeSlider(config) {
   }
 
   const handleArrowClick = (direction) => {
-    const itemsCount = $(config.slider_id + ' .product-item').length;
+    const itemsCount = $(config.slider_id + ' .product-item').length / $(config.slider_id).length;
     const maxVisibleItems = Math.floor(getSliderWidth() / (config.item_width + 20));
 
     if (direction === 'left' && currentIndex > 0) {
