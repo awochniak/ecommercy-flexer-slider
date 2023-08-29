@@ -110,6 +110,7 @@ function injectMegamenuActionButton() {
 }
 
 function addProductOfTheDaysToMegamenu() {
+  return
   setTimeout(function () {
     console.info(`Product of the day added to list`)
     $(".productoftheday_menu .slider-wrap").each(function () {
