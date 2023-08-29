@@ -675,6 +675,13 @@ function handleMobileFilterButton() {
     mobileFilterButton.toggleClass('anchored', scrollY > threshold);
   });
 
+  $(document.body).on('touchmove', function() {
+    const scrollY = $(window).scrollTop();
+    const threshold = 100;
+
+    mobileFilterButton.toggleClass('anchored', scrollY > threshold);
+  });
+  
   mobileFilterButton.on("click", () => {
     mobileItemBackground.toggle();
     $("#box_filter").toggle()
