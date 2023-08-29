@@ -25,7 +25,8 @@ function initializeConfiguration() {
   handleMobileFilterButton();
   initProductHover();
 
-  appendProductCountOnFooterMenu()
+  appendProductCountOnFooterMenu();
+  renderProducts();
 }
 
 function setupCart() {
@@ -748,6 +749,73 @@ function appendProductCountOnFooterMenu() {
     $(".counts-product-footer").text(productCountText)
     $(".counts-product-footer").show()
   }
+}
+
+// Function to create a product element
+function createProductElement(product) {
+  const productElement = document.createElement("div");
+  productElement.className = "product product-item row center";
+
+  // Add your HTML structure here, using product data
+  productElement.innerHTML = `
+      <div class="product-inner-wrapper">
+              <a href="${product.url}" title="${product.name}" class="row">
+                  <span class="boximgsize row">
+                      <img src="/environment/cache/images/300_300_productGfx_${product.main_image}/Mask-Group-25.png" data-src="/environment/cache/images/300_300_productGfx_${product.main_image}/Mask-Group-25.png">
+                      <noscript>
+                          <img src="/environment/cache/images/300_300_productGfx_${product.main_image}/Mask-Group-25.png" alt="${product.name}">
+                      </noscript>
+                  </span>
+                  <div class="manufacturer row">
+                      <span>${product.producer.name}</span>
+                  </div>
+                  <div class="productnamewrap row">
+                      <span class="productname">${product.name}</span>
+                  </div>
+              </a>
+              <div class="price price_extended row">
+                  <section>
+                      <p>
+                          <em>${product.price.gross.base}</em>
+                      </p>
+                  </section>
+                  <span class="hide price-netto">
+                      <p>
+                          <em>${product.price.net.base}</em>
+                      </p>
+                  </span>
+              </div>
+              <a href="${window.location.href}pl/fav/add/${product.stockId}">
+              <img class="add-to-fav" src="${templateConfiguration.templatePath}/images/user/add-to-fav.svg">
+              </a>
+              <form class="basket basket-box " action="/pl/basket/add/post" method="post">
+                  <fieldset>
+                      <div class="shaded_inputwrap"><input name="quantity" value="1" type="text" class="short center"></div>
+                      <span class="unit">szt.</span>
+                      <input type="hidden" value="${product.stockId}" name="stock_id">
+                      <button class="addtobasket btn btn-red" type="submit">
+                      <img src="/libraries/images/1px.gif" alt="" class="px1">
+                      </button>
+                  </fieldset>
+              </form>
+          </div>
+      </div>
+  `;
+
+  return productElement;
+}
+
+// Function to render products
+function renderProducts() {
+  const productsContainer = document.querySelectorAll(".productoftheday_menu .slider-content");
+  const products = frontAPI.getPotdProducts().list;
+
+  productsContainer.forEach(productContainer => {
+    products.forEach((product) => {
+      const productElement = createProductElement(product);
+      productContainer.append(productElement);
+    });
+  })
 }
 
 const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
