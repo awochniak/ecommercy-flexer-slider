@@ -522,17 +522,23 @@ function setupMenuExpander() {
   if (!menuItems.length) return;
 
   menuItems.on("click", function (e) {
-    e.preventDefault();
     const lowerMenu = $(this).next();
     if (!lowerMenu.length) return;
 
-    const lowerMenuHidden = lowerMenu.css("display") === "none";
-    if (lowerMenuHidden) {
-      $(this).removeClass("collapsed");
-      lowerMenu.css("display", "block");
-    } else {
-      $(this).addClass("collapsed");
-      lowerMenu.css("display", "none");
+    // Calculate the position of the click relative to the element
+    const clickPosition = e.clientX - $(this).offset().left;
+
+    // Check if the click is within the last 24 pixels of the element
+    if (clickPosition >= $(this).outerWidth() - 24) {
+      e.preventDefault();
+      const lowerMenuHidden = lowerMenu.css("display") === "none";
+      if (lowerMenuHidden) {
+        $(this).removeClass("collapsed");
+        lowerMenu.css("display", "block");
+      } else {
+        $(this).addClass("collapsed");
+        lowerMenu.css("display", "none");
+      }
     }
   });
 }
