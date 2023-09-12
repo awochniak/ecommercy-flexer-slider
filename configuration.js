@@ -257,7 +257,6 @@ function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
   ul.classList.add(`mobile-level-${level}`);
 
   // Create an h1 element
-    console.log(categories)
   var a = document.createElement("a");
   a.classList = "title-menu"
   a.href = h1Url;
