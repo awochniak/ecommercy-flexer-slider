@@ -329,31 +329,38 @@ function setupItemCountModifiers() {
   setupItemCountModifier(".quantity_wrap input");
 }
 
-function setupItemCountModifier(selector) {
-  const input = $(selector)[0];
-  if (!input) return;
+function setupItemCountModifier(inputSelector) {
+  const inputs = Array.from(document.querySelectorAll(inputSelector));
+  const moreButtons = Array.from(document.querySelectorAll(".more-item"));
+  const lessButtons = Array.from(document.querySelectorAll(".less-item"));
 
-  const incrementButton = $(".more-item")[0];
-  const decrementButton = $(".less-item")[0];
-
-  incrementButton.addEventListener("click", () => incrementValue(input));
-  decrementButton.addEventListener("click", () => decrementValue(input));
-}
-
-function incrementValue(itemCountInput) {
-  const currentValue = parseInt(itemCountInput.value);
-  itemCountInput.value = currentValue + 1;
-  const event = new Event("change", { bubbles: true });
-  itemCountInput.dispatchEvent(event);
-}
-
-function decrementValue(itemCountInput) {
-  const currentValue = parseInt(itemCountInput.value);
-  if (currentValue > 1) {
-    itemCountInput.value = currentValue - 1;
-    const event = new Event("change", { bubbles: true });
-    itemCountInput.dispatchEvent(event);
+  function incrementValue(input) {
+      try {
+        const currentValue = Number(input.value);
+        input.value = currentValue + 1;
+        const event = new Event("change", { bubbles: true });
+        input.dispatchEvent(event);
+      } catch (error) {}
   }
+
+  function decrementValue(input) {
+      try {
+        const currentValue = Number(input.value);
+        if (currentValue > 1) {
+          input.value = currentValue - 1;
+          const event = new Event("change", { bubbles: true });
+          input.dispatchEvent(event);
+        }
+      } catch (error) {}
+  }
+
+  moreButtons.forEach((button, index) => {
+    button.addEventListener("click", () => incrementValue(inputs[index]));
+  });
+
+  lessButtons.forEach((button, index) => {
+    button.addEventListener("click", () => decrementValue(inputs[index]));
+  });
 }
 
 function setupSiteCartActionListeners() {
