@@ -647,7 +647,8 @@ function handleMobileMenu() {
 function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer, isBasketContainer) {
   $(".mobile-items-background").show();
   $(".swipeable-mobile-menu").hide();
-  
+  $("#box_filter").hide();
+
   mobileMenu.style.display = "block";
   Array.from(menuItems).forEach((element) => { element.style.display = "none"; });
   document.querySelector(selector).style.display = "flex";
