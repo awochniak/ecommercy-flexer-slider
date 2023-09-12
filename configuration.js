@@ -193,10 +193,32 @@ function setupMobileMenu() {
   }
 }
 
+function setupMobileMenu() {
+  const variant = templateConfiguration.mobileMenuType
+  console.info(`Selected mobile menu type: ${variant}`)
+
+  switch (variant) {
+    case "horizontal":
+      appendSwipeableMobileMenu();
+      $(".fa-align-justify").off();
+      $(".fa-align-justify").on("click", function(e) {
+        e.preventDefault()
+        $(".swipeable-mobile-menu").toggle()
+      })
+      break;
+
+    case "vertical":
+      break;
+
+    default:
+      console.warn(`Invalid mobile menu type variant: "${variant}". The variant was not applied.`)
+  }
+}
+
 function appendSwipeableMobileMenu() {
   var div = document.createElement("div");
   div.classList.add("swipeable-mobile-menu")
-  div.appendChild(createHTMLTree(frontAPI.getCategories(), 0, templateConfiguration.translation.backToShop, templateConfiguration.translation.mobileMenuTitle))
+  div.appendChild(createHTMLTree(frontAPI.getCategories(), 0, templateConfiguration.translation.backToShop, templateConfiguration.translation.mobileMenuTitle, ""))
 
   document.body.appendChild(div);
 
@@ -230,13 +252,16 @@ function appendSwipeableMobileMenu() {
   });
 }
 
-function createHTMLTree(categories, level, buttonText, h1Text) {
+function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
   var ul = document.createElement("ul");
   ul.classList.add(`mobile-level-${level}`);
 
   // Create an h1 element
-  var h1 = document.createElement("h1");
-  h1.textContent = h1Text;
+    console.log(categories)
+  var a = document.createElement("a");
+  a.classList = "title-menu"
+  a.href = h1Url;
+  a.textContent = h1Text;
 
   // Create a button element
   var button = document.createElement("button");
@@ -244,7 +269,7 @@ function createHTMLTree(categories, level, buttonText, h1Text) {
   button.textContent = buttonText;
 
   ul.appendChild(button);
-  ul.appendChild(h1);
+  ul.appendChild(a);
 
   categories.forEach(category => {
     var li = document.createElement("li");
@@ -257,7 +282,7 @@ function createHTMLTree(categories, level, buttonText, h1Text) {
     li.appendChild(a);
 
     if (category.children.length > 0) {
-      var subTree = createHTMLTree(category.children, level + 1, h1Text, category.name);
+      var subTree = createHTMLTree(category.children, level + 1, h1Text, category.name, `/pl/c/${category.name}/${category.id}`);
       li.appendChild(subTree);
     }
 
