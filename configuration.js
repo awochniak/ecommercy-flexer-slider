@@ -27,6 +27,7 @@ function initializeConfiguration() {
 
     appendProductCountOnFooterMenu();
     renderProducts();
+    handleMobileItemsBackgroundClick()
 }
 
 function setupCart() {
@@ -868,6 +869,21 @@ function renderProducts() {
             productContainer.append(productElement);
         });
     })
+}
+
+function handleMobileItemsBackgroundClick() {
+  $(".mobile-items-background").on("click", function () {
+    $(".swipeable-mobile-menu").hide();
+    $(".mobile-menu-items").hide();
+    $("#box_filter").hide();
+    $(this).hide()
+
+    const searchContainer = document.querySelector(".search__container");
+    searchContainer.style.display = "none";
+
+    const basketContainer = document.querySelector(".basket-site-cart");
+    basketContainer.style.cssText = "display: none !important;";
+  });
 }
 
 const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
