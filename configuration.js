@@ -651,9 +651,9 @@ function handleBackgroundOnMobileMenuClick() {
 
     menuIcon.addEventListener('click', function () {
         const isMobileMenuVisible = window.getComputedStyle(mobileMenu).display === "block";
+        document.querySelector("#box_filter").style.display = "none";
 
         if (isMobileMenuVisible) {
-            document.querySelector("#box_filter").style.display = "none";
             document.querySelector(".search__container").style.display = "none";
             document.querySelector(".basket-site-cart").style.cssText = "display: none !important;";
             mobileMenu.style.display = "none";
