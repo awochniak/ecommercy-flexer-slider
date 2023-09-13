@@ -734,11 +734,23 @@ function handleMobileFilterButton() {
     mobileFilterButton.on("click", () => {
         mobileItemBackground.toggle();
         $("#box_filter").toggle()
+        
+        if (mobileItemBackground.css("display") == "block") {
+            $("html").css("overflow-y", "hidden");
+        } else {
+            $("html").css("overflow-y", "scroll");
+        }
     });
 
     mobileFilterMenuBack.on("click", () => {
         mobileItemBackground.toggle();
         $("#box_filter").toggle()
+
+        if (mobileItemBackground.css("display") == "block") {
+            $("html").css("overflow-y", "hidden");
+        } else {
+            $("html").css("overflow-y", "scroll");
+        }
     });
 }
 
