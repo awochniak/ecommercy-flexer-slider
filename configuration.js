@@ -659,12 +659,8 @@ function handleBackgroundOnMobileMenuClick() {
             mobileMenu.style.display = "none";
             html.style.overflowY = "scroll";
         } else {
-            mobileItemsBackground.style.display = "block";
             html.style.overflowY = "hidden";
         }
-
-        if (window.getComputedStyle(mobileItemsBackground).display === "block") return;
-        
         mobileItemsBackground.style.display = "block";
     });
 }
