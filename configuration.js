@@ -705,8 +705,8 @@ function handleMobileFilterButton() {
     const shopProductList = $(".shop_product_list");
     if (shopProductList.length == 0) return
 
-    $(window).scroll(function () {
-        const scrollY = $(window).scrollTop();
+    document.body.addEventListener('scroll', () => {
+        const scrollY = document.body.scrollTop 
         const threshold = 100;
 
         mobileFilterButton.toggleClass('anchored', scrollY > threshold);
