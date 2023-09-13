@@ -193,28 +193,6 @@ function setupMobileMenu() {
     }
 }
 
-function setupMobileMenu() {
-    const variant = templateConfiguration.mobileMenuType
-    console.info(`Selected mobile menu type: ${variant}`)
-
-    switch (variant) {
-        case "horizontal":
-            appendSwipeableMobileMenu();
-            $(".fa-align-justify").off();
-            $(".fa-align-justify").on("click", function (e) {
-                e.preventDefault()
-                $(".swipeable-mobile-menu").toggle()
-            })
-            break;
-
-        case "vertical":
-            break;
-
-        default:
-            console.warn(`Invalid mobile menu type variant: "${variant}". The variant was not applied.`)
-    }
-}
-
 function appendSwipeableMobileMenu() {
     var div = document.createElement("div");
     div.classList.add("swipeable-mobile-menu")
@@ -676,7 +654,7 @@ function handleBackgroundOnMobileMenuClick() {
             $("html").css("overflow-y", "scroll");
         }
         $(".mobile-items-background").toggle();
-        if($(".mobile-items-background").css("display") == "block") {
+        if ($(".mobile-items-background").css("display") == "block") {
             $("html").css("overflow-y", "hidden");
         } else {
             $("html").css("overflow-y", "scroll");
@@ -734,7 +712,7 @@ function handleMobileFilterButton() {
     mobileFilterButton.on("click", () => {
         mobileItemBackground.toggle();
         $("#box_filter").toggle()
-        
+
         if (mobileItemBackground.css("display") == "block") {
             $("html").css("overflow-y", "hidden");
         } else {
