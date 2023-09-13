@@ -31,6 +31,8 @@ function initializeConfiguration() {
 
     setupPaymentIcons();
     setupShippingIcons();
+
+    observeProductChanges();
 }
 
 function setupCart() {
@@ -909,5 +911,20 @@ function setupShippingIcons() {
   });
 }
 
-const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
+function observeProductChanges() {
+  const containers = document.querySelectorAll('.right.basket');
 
+  containers.forEach((container) => {
+    const observer = new MutationObserver(observeProduct);
+    const config = { attributes: true, childList: true, subtree: true };
+    observer.observe(container, config);
+  });
+}
+
+function observeProduct(mutationsList, observer) {
+  mutationsList.forEach((mutation) => {
+    $(".ajax-product-block .btn.left").click(() => window.location.reload())
+  });
+}
+
+const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
