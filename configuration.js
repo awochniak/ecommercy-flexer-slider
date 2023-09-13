@@ -676,7 +676,7 @@ function handleBackgroundOnMobileMenuClick() {
             $("html").css("overflow-y", "scroll");
         }
         $(".mobile-items-background").toggle();
-        if((".mobile-items-background").css("display") == "block") {
+        if($(".mobile-items-background").css("display") == "block") {
             $("html").css("overflow-y", "hidden");
         } else {
             $("html").css("overflow-y", "scroll");
