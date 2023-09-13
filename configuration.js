@@ -645,9 +645,9 @@ function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer,
 
 function handleBackgroundOnMobileMenuClick() {
     $(".fa-align-justify").on('click', function () {
-        $("#box_filter").hide();
         const mobileMenu = document.querySelector(".mobile-menu-items");
         if (mobileMenu.style.display == "block") {
+            $("#box_filter").hide();
             document.querySelector(".search__container").style.display = "none";
             document.querySelector(".basket-site-cart").style.cssText = "display: none !important;";
             mobileMenu.style.display = "none";
