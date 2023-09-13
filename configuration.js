@@ -657,11 +657,14 @@ function handleBackgroundOnMobileMenuClick() {
             document.querySelector(".search__container").style.display = "none";
             document.querySelector(".basket-site-cart").style.cssText = "display: none !important;";
             mobileMenu.style.display = "none";
-            mobileItemsBackground.style.display = "none";
             html.style.overflowY = "scroll";
         } else {
             mobileItemsBackground.style.display = "block";
             html.style.overflowY = "hidden";
+        }
+
+        if (window.getComputedStyle(mobileItemsBackground).display !== "block") {
+            mobileItemsBackground.style.display = "block";
         }
     });
 }
