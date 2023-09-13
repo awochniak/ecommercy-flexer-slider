@@ -645,6 +645,7 @@ function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer,
 
 function handleBackgroundOnMobileMenuClick() {
     $(".fa-align-justify").on('click', function () {
+        $("#box_filter").hide();
         const mobileMenu = document.querySelector(".mobile-menu-items");
         if (mobileMenu.style.display == "block") {
             document.querySelector(".search__container").style.display = "none";
