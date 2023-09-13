@@ -663,9 +663,9 @@ function handleBackgroundOnMobileMenuClick() {
             html.style.overflowY = "hidden";
         }
 
-        if (window.getComputedStyle(mobileItemsBackground).display !== "block") {
-            mobileItemsBackground.style.display = "block";
-        }
+        if (window.getComputedStyle(mobileItemsBackground).display === "block") return;
+        
+        mobileItemsBackground.style.display = "block";
     });
 }
 
