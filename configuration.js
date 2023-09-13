@@ -27,7 +27,10 @@ function initializeConfiguration() {
 
     appendProductCountOnFooterMenu();
     renderProducts();
-    handleMobileItemsBackgroundClick()
+    handleMobileItemsBackgroundClick();
+
+    setupPaymentIcons();
+    setupShippingIcons();
 }
 
 function setupCart() {
@@ -883,6 +886,26 @@ function handleMobileItemsBackgroundClick() {
 
     const basketContainer = document.querySelector(".basket-site-cart");
     basketContainer.style.cssText = "display: none !important;";
+  });
+}
+
+function setupPaymentIcons() {
+  if (!$(".shop_basket")) return
+
+  templateConfiguration.paymentsConfiguration.forEach((config) => {
+    const section = $(`#${config.name}`).parent().next();
+    section.css("background-image", `url(${config.url})`);
+    section.css("padding-left", "48px");
+  });
+}
+
+function setupShippingIcons() {
+  if (!$(".shop_basket")) return
+
+  templateConfiguration.shippingsConfiguration.forEach((config) => {
+    const section = $(`#${config.name}`).parent().next();
+    section.css("background-image", `url(${config.url})`);
+    section.css("padding-left", "48px");
   });
 }
 
