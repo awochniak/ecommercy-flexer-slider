@@ -229,7 +229,7 @@ function appendSwipeableMobileMenu() {
         if (currentLevel === 0) {
             mobileMenu.hide()
             $(".mobile-items-background").hide();
-            $("body").css("overflow-y", "scroll");
+            $("html").css("overflow-y", "scroll");
             return
         }
 
@@ -630,7 +630,7 @@ function handleMobileMenu() {
         const searchContainer = document.querySelector(".search__container");
         searchContainer.style.display = "none";
         $(".mobile-items-background").hide();
-        $("body").css("overflow-y", "scroll");
+        $("html").css("overflow-y", "scroll");
     });
 
     $(".basket-site-cart button").on('click', function () {
@@ -638,7 +638,7 @@ function handleMobileMenu() {
         const basketContainer = document.querySelector(".basket-site-cart");
         basketContainer.style.cssText = "display: none !important;";
         $(".mobile-items-background").hide();
-        $("body").css("overflow-y", "scroll");
+        $("html").css("overflow-y", "scroll");
     })
 
     contact.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-contact", false, false));
@@ -649,7 +649,7 @@ function handleMobileMenu() {
 
 function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer, isBasketContainer) {
     $(".mobile-items-background").show();
-    $("body").css("overflow-y", "hidden");
+    $("html").css("overflow-y", "hidden");
 
     $(".swipeable-mobile-menu").hide();
     $("#box_filter").hide();
@@ -673,7 +673,7 @@ function handleBackgroundOnMobileMenuClick() {
             document.querySelector(".basket-site-cart").style.cssText = "display: none !important;";
             mobileMenu.style.display = "none";
             $(".mobile-items-background").hide();
-            $("body").css("overflow-y", "scroll");
+            $("html").css("overflow-y", "scroll");
         }
         $(".mobile-items-background").toggle();
     })
