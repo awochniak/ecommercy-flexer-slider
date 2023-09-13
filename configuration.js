@@ -644,23 +644,26 @@ function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer,
 }
 
 function handleBackgroundOnMobileMenuClick() {
-    $(".fa-align-justify").on('click', function () {
-        const mobileMenu = document.querySelector(".mobile-menu-items");
-        if (mobileMenu.style.display == "block") {
-            $("#box_filter").hide();
+    const menuIcon = document.querySelector(".fa-align-justify");
+    const mobileMenu = document.querySelector(".mobile-menu-items");
+    const mobileItemsBackground = document.querySelector(".mobile-items-background");
+    const html = document.querySelector("html");
+
+    menuIcon.addEventListener('click', function () {
+        const isMobileMenuVisible = window.getComputedStyle(mobileMenu).display === "block";
+
+        if (isMobileMenuVisible) {
+            document.querySelector("#box_filter").style.display = "none";
             document.querySelector(".search__container").style.display = "none";
             document.querySelector(".basket-site-cart").style.cssText = "display: none !important;";
             mobileMenu.style.display = "none";
-            $(".mobile-items-background").hide();
-            $("html").css("overflow-y", "scroll");
-        }
-        $(".mobile-items-background").toggle();
-        if ($(".mobile-items-background").css("display") == "block") {
-            $("html").css("overflow-y", "hidden");
+            mobileItemsBackground.style.display = "none";
+            html.style.overflowY = "scroll";
         } else {
-            $("html").css("overflow-y", "scroll");
+            mobileItemsBackground.style.display = "block";
+            html.style.overflowY = "hidden";
         }
-    })
+    });
 }
 
 function handleProductContainerPosition() {
