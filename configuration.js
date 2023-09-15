@@ -34,6 +34,7 @@ function initializeConfiguration() {
 
     observeProductChanges();
     handleAddOpinionOnTabs();
+    handleHideMenuOnBackgroundMousenter();
 }
 
 function setupCart() {
@@ -939,6 +940,14 @@ function handleAddOpinionOnTabs() {
     e.preventDefault();
     $(".comments-btn").trigger("click")
     $('body').animate({ scrollTop: $(".comments-btn").position().top });
+  });
+}
+
+function handleHideMenuOnBackgroundMousenter() {
+  $(".menu-background").on("mouseenter", function () {
+    const el = $(this)
+    el.addClass("menu-background-hidden")
+    setTimeout(() => { el.removeClass("menu-background-hidden") }, 400);
   });
 }
 
