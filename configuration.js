@@ -288,6 +288,10 @@ function setupExtraMessages() {
         currentShownExtraMessageIndex = (currentShownExtraMessageIndex - 1 + $(".extra-message").length) % $(".extra-message").length
         $(".extra-message").css("display", "none").eq(currentShownExtraMessageIndex).css("display", "block")
     })
+
+    setInterval(function(){
+        $(".next-message").trigger("click");
+    }, templateConfiguration.extraMessageAutoChangeAfter);
 }
 
 function setupCombinedOffersAndNewProducts() {
