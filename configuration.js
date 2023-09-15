@@ -212,6 +212,11 @@ function appendSwipeableMobileMenu() {
     const mobileMenu = $(".swipeable-mobile-menu");
 
     $(".mobile-menu-back").on("click", function (e) {
+        if (window.innerWidth > 1300) {
+            $(".basket-site-cart").get(0).trigger("mouseleave");
+            return
+        } 
+        
         if (currentLevel === 0) {
             mobileMenu.hide()
             $(".mobile-items-background").hide();
