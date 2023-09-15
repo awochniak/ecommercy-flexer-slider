@@ -215,7 +215,8 @@ function appendSwipeableMobileMenu() {
         if (currentLevel === 0) {
             mobileMenu.hide()
             $(".mobile-items-background").hide();
-            $("html").css("overflow-y", "scroll");
+            const htmlBox = document.querySelector("html");
+            htmlBox.style.cssText = "overflow-y: scroll !important;";
             return
         }
 
@@ -620,7 +621,8 @@ function handleMobileMenu() {
         const searchContainer = document.querySelector(".search__container");
         searchContainer.style.display = "none";
         $(".mobile-items-background").hide();
-        $("html").css("overflow-y", "scroll");
+        const htmlBox = document.querySelector("html");
+        htmlBox.style.cssText = "overflow-y: scroll !important;";
     });
 
     $(".basket-site-cart button").on('click', function () {
@@ -633,7 +635,8 @@ function handleMobileMenu() {
         const basketContainer = document.querySelector(".basket-site-cart");
         basketContainer.style.cssText = "display: none !important;";
         $(".mobile-items-background").hide();
-        $("html").css("overflow-y", "scroll");
+        const htmlBox = document.querySelector("html");
+        htmlBox.style.cssText = "overflow-y: scroll !important;";
     })
 
     contact.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-contact", false, false));
@@ -644,7 +647,8 @@ function handleMobileMenu() {
 
 function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer, isBasketContainer) {
     $(".mobile-items-background").show();
-    $("html").css("overflow-y", "hidden");
+    const htmlBox = document.querySelector("html");
+    htmlBox.style.cssText = "overflow-y: hidden !important;";
 
     $(".swipeable-mobile-menu").hide();
     $("#box_filter").hide();
@@ -737,9 +741,11 @@ function handleMobileFilterButton() {
         $("#box_filter").toggle()
 
         if (mobileItemBackground.css("display") == "block") {
-            $("html").css("overflow-y", "hidden");
+            const htmlBox = document.querySelector("html");
+            htmlBox.style.cssText = "overflow-y: hidden !important;";
         } else {
-            $("html").css("overflow-y", "scroll");
+            const htmlBox = document.querySelector("html");
+            htmlBox.style.cssText = "overflow-y: scroll !important;";
         }
     });
 
@@ -748,9 +754,11 @@ function handleMobileFilterButton() {
         $("#box_filter").toggle()
 
         if (mobileItemBackground.css("display") == "block") {
-            $("html").css("overflow-y", "hidden");
+            const htmlBox = document.querySelector("html");
+            htmlBox.style.cssText = "overflow-y: hidden !important;";
         } else {
-            $("html").css("overflow-y", "scroll");
+            const htmlBox = document.querySelector("html");
+            htmlBox.style.cssText = "overflow-y: scroll !important;";
         }
     });
 }
