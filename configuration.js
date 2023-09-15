@@ -33,6 +33,7 @@ function initializeConfiguration() {
     setupShippingIcons();
 
     observeProductChanges();
+    handleAddOpinionOnTabs();
 }
 
 function setupCart() {
@@ -928,6 +929,16 @@ function observeProductChanges() {
 function observeProduct(mutationsList, observer) {
   mutationsList.forEach((mutation) => {
     $(".ajax-product-block .btn.left").click(() => window.location.reload())
+  });
+}
+
+function handleAddOpinionOnTabs() {
+  $(".comment a").click(function (e) {
+    if (!$(".with-tabs")) return
+
+    e.preventDefault();
+    $(".comments-btn").trigger("click")
+    $('body').animate({ scrollTop: $(".comments-btn").position().top });
   });
 }
 
