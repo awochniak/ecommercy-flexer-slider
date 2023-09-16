@@ -731,7 +731,7 @@ function handleMobileFilterButton() {
     });
 
     document.body.addEventListener('touchmove', () => {
-        const scrollY = $(window).scrollTop();
+        const scrollY = document.body.scrollTop();
         const threshold = 100;
 
         mobileFilterButton.toggleClass('anchored', scrollY > threshold);
