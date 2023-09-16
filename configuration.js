@@ -942,7 +942,7 @@ function observeProductChanges() {
 
 function observeProduct(mutationsList, observer) {
   mutationsList.forEach((mutation) => {
-    $(".ajax-product-block .btn.left").click(() => window.location = window.location.host)
+    $(".ajax-product-block .btn.left").click(() => document.location.href="/")
   });
 }
 
