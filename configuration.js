@@ -675,7 +675,6 @@ function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer,
 function handleBackgroundOnMobileMenuClick() {
     const menuIcon = document.querySelector(".fa-align-justify");
     const mobileMenu = document.querySelector(".mobile-menu-items");
-    const mobileItemsBackground = document.querySelector(".mobile-items-background");
     const boxFilter = document.querySelector("#box_filter");
     const html = document.querySelector("html");
 
@@ -689,10 +688,8 @@ function handleBackgroundOnMobileMenuClick() {
             document.querySelector(".search__container").style.display = "none";
             document.querySelector(".basket-site-cart").style.cssText = "display: none !important;";
             mobileMenu.style.display = "none";
-            $(".mobile-items-background").show();
             html.style.overflowY = "scroll";
         } else {
-            $(".mobile-items-background").hide();
             html.style.overflowY = "hidden";
         }
     });
