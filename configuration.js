@@ -642,7 +642,10 @@ function handleMobileMenu() {
     })
 
     contact.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-contact", false, false));
-    search.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-search", true, false));
+    search.addEventListener("click", () => {
+        onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-search", true, false)
+        $(".search__container").show();
+    });
     account.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-profile", false, false));
     basket.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-basket", false, true));
 }
