@@ -915,6 +915,8 @@ function handleMobileItemsBackgroundClick() {
 
     const basketContainer = document.querySelector(".basket-site-cart");
     basketContainer.style.cssText = "display: none !important;";
+
+    $(".search__container").hide();
   });
 }
 
