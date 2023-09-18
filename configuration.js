@@ -190,12 +190,6 @@ function setupMobileMenu() {
             $(".fa-align-justify").on("click", function (e) {
                 e.preventDefault()
                 $(".swipeable-mobile-menu").toggle()
-
-                if ($(".mobile-items-background").css('display') === "none") {
-                    $(".mobile-items-background").show();
-                } else {
-                    $(".mobile-items-background").hide();
-                }
             })
             break;
 
@@ -217,7 +211,7 @@ function appendSwipeableMobileMenu() {
     let currentLevel = 0;
     const mobileMenu = $(".swipeable-mobile-menu");
 
-    $(".mobile-menu-back").on("click", function (e) {        
+    $(".mobile-menu-back").on("click", function (e) {
         if (currentLevel === 0) {
             mobileMenu.hide()
             $(".mobile-items-background").hide();
@@ -298,7 +292,7 @@ function setupExtraMessages() {
         $(".extra-message").css("display", "none").eq(currentShownExtraMessageIndex).css("display", "block")
     })
 
-    setInterval(function(){
+    setInterval(function () {
         currentShownExtraMessageIndex = (currentShownExtraMessageIndex + 1) % $(".extra-message").length
         $(".extra-message").css("display", "none").eq(currentShownExtraMessageIndex).css("display", "block")
     }, templateConfiguration.extraMessageAutoChangeAfter);
@@ -638,8 +632,8 @@ function handleMobileMenu() {
         if (window.innerWidth > 1300) {
             $(".basket-site-cart").get(0).trigger("mouseleave");
             return
-        } 
-        
+        }
+
         mobileMenu.style.display = "none";
         const basketContainer = document.querySelector(".basket-site-cart");
         basketContainer.style.cssText = "display: none !important;";
@@ -695,11 +689,12 @@ function handleBackgroundOnMobileMenuClick() {
             document.querySelector(".search__container").style.display = "none";
             document.querySelector(".basket-site-cart").style.cssText = "display: none !important;";
             mobileMenu.style.display = "none";
+            $(".mobile-items-background").show();
             html.style.overflowY = "scroll";
         } else {
+            $(".mobile-items-background").hide();
             html.style.overflowY = "hidden";
         }
-        mobileItemsBackground.style.display = "block";
     });
 }
 
@@ -737,7 +732,7 @@ function handleMobileFilterButton() {
     if (shopProductList.length == 0) return
 
     document.body.addEventListener('scroll', () => {
-        const scrollY = document.body.scrollTop 
+        const scrollY = document.body.scrollTop
         const threshold = 100;
 
         mobileFilterButton.toggleClass('anchored', scrollY > threshold);
@@ -910,74 +905,74 @@ function renderProducts() {
 }
 
 function handleMobileItemsBackgroundClick() {
-  $(".mobile-items-background").on("click", function () {
-    $(".swipeable-mobile-menu").hide();
-    $(".mobile-menu-items").hide();
-    $("#box_filter").hide();
-    $(this).hide()
+    $(".mobile-items-background").on("click", function () {
+        $(".swipeable-mobile-menu").hide();
+        $(".mobile-menu-items").hide();
+        $("#box_filter").hide();
+        $(this).hide()
 
-    const searchContainer = document.querySelector(".search__container");
-    searchContainer.style.display = "none";
+        const searchContainer = document.querySelector(".search__container");
+        searchContainer.style.display = "none";
 
-    const basketContainer = document.querySelector(".basket-site-cart");
-    basketContainer.style.cssText = "display: none !important;";
+        const basketContainer = document.querySelector(".basket-site-cart");
+        basketContainer.style.cssText = "display: none !important;";
 
-    $(".search__container").hide();
-  });
+        $(".search__container").hide();
+    });
 }
 
 function setupPaymentIcons() {
-  if (!$(".shop_basket")) return
+    if (!$(".shop_basket")) return
 
-  templateConfiguration.paymentsConfiguration.forEach((config) => {
-    const section = $(`#${config.name}`).parent().next();
-    section.css("background-image", `url(${config.url})`);
-    section.css("padding-left", "48px");
-  });
+    templateConfiguration.paymentsConfiguration.forEach((config) => {
+        const section = $(`#${config.name}`).parent().next();
+        section.css("background-image", `url(${config.url})`);
+        section.css("padding-left", "48px");
+    });
 }
 
 function setupShippingIcons() {
-  if (!$(".shop_basket")) return
+    if (!$(".shop_basket")) return
 
-  templateConfiguration.shippingsConfiguration.forEach((config) => {
-    const section = $(`#${config.name}`).parent().next();
-    section.css("background-image", `url(${config.url})`);
-    section.css("padding-left", "48px");
-  });
+    templateConfiguration.shippingsConfiguration.forEach((config) => {
+        const section = $(`#${config.name}`).parent().next();
+        section.css("background-image", `url(${config.url})`);
+        section.css("padding-left", "48px");
+    });
 }
 
 function observeProductChanges() {
-  const containers = document.querySelectorAll('.right.basket');
+    const containers = document.querySelectorAll('.right.basket');
 
-  containers.forEach((container) => {
-    const observer = new MutationObserver(observeProduct);
-    const config = { attributes: true, childList: true, subtree: true };
-    observer.observe(container, config);
-  });
+    containers.forEach((container) => {
+        const observer = new MutationObserver(observeProduct);
+        const config = { attributes: true, childList: true, subtree: true };
+        observer.observe(container, config);
+    });
 }
 
 function observeProduct(mutationsList, observer) {
-  mutationsList.forEach((mutation) => {
-    $(".ajax-product-block .btn.left").click(() => document.location.href="/")
-  });
+    mutationsList.forEach((mutation) => {
+        $(".ajax-product-block .btn.left").click(() => document.location.href = "/")
+    });
 }
 
 function handleAddOpinionOnTabs() {
-  $(".comment a").click(function (e) {
-    if (!$(".with-tabs")) return
+    $(".comment a").click(function (e) {
+        if (!$(".with-tabs")) return
 
-    e.preventDefault();
-    $(".comments-btn").trigger("click")
-    $('body').animate({ scrollTop: $(".comments-btn").position().top });
-  });
+        e.preventDefault();
+        $(".comments-btn").trigger("click")
+        $('body').animate({ scrollTop: $(".comments-btn").position().top });
+    });
 }
 
 function handleHideMenuOnBackgroundMousenter() {
-  $(".menu-background").on("mouseenter", function () {
-    const el = $(this)
-    el.addClass("menu-background-hidden")
-    setTimeout(() => { el.removeClass("menu-background-hidden") }, 400);
-  });
+    $(".menu-background").on("mouseenter", function () {
+        const el = $(this)
+        el.addClass("menu-background-hidden")
+        setTimeout(() => { el.removeClass("menu-background-hidden") }, 400);
+    });
 }
 
 const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
