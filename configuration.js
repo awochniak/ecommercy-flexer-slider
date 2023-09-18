@@ -625,6 +625,7 @@ function handleMobileMenu() {
         $(".mobile-items-background").hide();
         const htmlBox = document.querySelector("html");
         htmlBox.style.cssText = "overflow-y: scroll !important;";
+        $(".search__container").hide();
     });
 
     $(".basket-site-cart button").on('click', function () {
@@ -639,6 +640,7 @@ function handleMobileMenu() {
         $(".mobile-items-background").hide();
         const htmlBox = document.querySelector("html");
         htmlBox.style.cssText = "overflow-y: scroll !important;";
+        $(".search__container").hide();
     })
 
     contact.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-contact", false, false));
@@ -651,6 +653,7 @@ function handleMobileMenu() {
 }
 
 function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer, isBasketContainer) {
+    $(".search__container").hide();
     $(".mobile-items-background").show();
     const htmlBox = document.querySelector("html");
     htmlBox.style.cssText = "overflow-y: hidden !important;";
