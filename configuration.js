@@ -397,7 +397,7 @@ function setupSiteCartActionListeners() {
         menu.style.zIndex = 25;
     });
 
-    $(basket).on("mouseenter", function () {
+    $(basket).on("click", function () {
         siteBasket.style.right = 0;
         background.style.opacity = 1;
         background.style.height = "100%";
