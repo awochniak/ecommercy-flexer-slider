@@ -978,4 +978,7 @@ function handleHideMenuOnBackgroundMousenter() {
 }
 
 const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
-setTimeout(() => $("html").css("height", "100%"), 600);
+setTimeout(() => {
+    $("html").css("height", "100%");
+    $("html").css("overflow-x", "hidden")
+}, 600);
