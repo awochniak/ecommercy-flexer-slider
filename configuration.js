@@ -981,4 +981,5 @@ const createButton = (className, text, clickHandler) => $("<button>", { class: c
 setTimeout(() => {
     $("html").css("height", "100%");
     $("html").css("overflow-x", "hidden")
+    $("html").css("overflow-x", "initial")
 }, 600);
