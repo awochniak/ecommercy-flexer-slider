@@ -3,7 +3,7 @@ function initializeConfiguration() {
     setupMegamenu()
     setupMobileMenu()
     setupExtraMessages();
-    setupCombinedOffersAndNewProducts();
+    // setupCombinedOffersAndNewProducts();
     setupSEOs();
     setupItemCountModifiers();
 
