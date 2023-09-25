@@ -491,15 +491,15 @@ function setupProductMainImage() {
     const productFullClassList = Array.from(productFull.classList);
 
     if (productFullClassList.includes("horizontal-miniatures")) {
-        setupCarouselProductPageHandler(4);
+        setupCarouselProductPageHandler(4, 4);
     } else if (productFullClassList.includes("carousel")) {
-        setupCarouselProductPageHandler(1);
+        setupCarouselProductPageHandler(1, 1);
     } else {
-        setupCarouselProductPageHandler(2);
+        setupCarouselProductPageHandler(2, 3);
     }
 }
 
-function setupCarouselProductPageHandler(itemsPerPage) {
+function setupCarouselProductPageHandler(itemsPerPage, itemsPerPageMobile) {
     const prevImage = $(".prev-image")[0];
     const nextImage = $(".next-image")[0];
     const links = $(".smallgallery a");
@@ -515,15 +515,17 @@ function setupCarouselProductPageHandler(itemsPerPage) {
     }
 
     $(prevImage).on("click", () => {
+        const counter = window.innerWidth < 767 ? itemsPerPageMobile : itemsPerPage
         currentStartIndex = Math.max(currentStartIndex - 1, 0);
-        showLinks(links, currentStartIndex, itemsPerPage);
+        showLinks(links, currentStartIndex, counter);
     });
 
     $(nextImage).on("click", () => {
+        const counter = window.innerWidth < 767 ? itemsPerPageMobile : itemsPerPage
         if (currentStartIndex + itemsPerPage <= links.length - 1) {
             currentStartIndex++;
         }
-        showLinks(links, currentStartIndex, itemsPerPage);
+        showLinks(links, currentStartIndex, counter);
     });
 }
 
