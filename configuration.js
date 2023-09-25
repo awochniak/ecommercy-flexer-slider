@@ -532,7 +532,7 @@ function setupCarouselProductPageHandler(itemsPerPage, itemsPerPageMobile) {
 function showLinks(links, startIndex, itemsPerPage) {
     links.each(function (idx, link) {
         if (idx >= startIndex && idx < startIndex + itemsPerPage) {
-            $(link).css("display", "block");
+            $(link).css("display", "inline");
         } else {
             $(link).css("display", "none");
         }
