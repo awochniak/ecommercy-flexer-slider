@@ -515,14 +515,14 @@ function setupCarouselProductPageHandler(itemsPerPage, itemsPerPageMobile) {
     }
 
     $(prevImage).on("click", () => {
-        const counter = window.innerWidth < 767 ? itemsPerPageMobile : itemsPerPage
+        const counter = window.innerWidth < 980 ? itemsPerPageMobile : itemsPerPage
         currentStartIndex = Math.max(currentStartIndex - 1, 0);
         showLinks(links, currentStartIndex, counter);
     });
 
     $(nextImage).on("click", () => {
-        const counter = window.innerWidth < 767 ? itemsPerPageMobile : itemsPerPage
-        if (currentStartIndex + itemsPerPage <= links.length - 1) {
+        const counter = window.innerWidth < 980 ? itemsPerPageMobile : itemsPerPage
+        if (currentStartIndex + counter <= links.length - 1) {
             currentStartIndex++;
         }
         showLinks(links, currentStartIndex, counter);
