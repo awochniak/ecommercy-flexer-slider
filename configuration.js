@@ -35,6 +35,7 @@ function initializeConfiguration() {
     observeProductChanges();
     handleAddOpinionOnTabs();
     handleHideMenuOnBackgroundMousenter();
+    handleVerticalMenu();
 }
 
 function setupCart() {
@@ -993,6 +994,27 @@ function handleHideMenuOnBackgroundMousenter() {
         el.addClass("menu-background-hidden")
         setTimeout(() => { el.removeClass("menu-background-hidden") }, 400);
     });
+}
+
+function handleVerticalMenu() {
+    handleBehaviourVerticalMenu()
+    $(window).on('resize', handleBehaviourVerticalMenu);
+}
+
+function handleBehaviourVerticalMenu() {
+  const isMobile = window.innerWidth <= 1030;
+  const h5Elements = $(".group-filter > h5");
+  const contentElements = h5Elements.next();
+
+  contentElements.toggle(isMobile);
+  h5Elements.off('click').toggleClass('expanded', false);
+
+  if (isMobile) {
+    h5Elements.on('click', function () {
+      $(this).next().toggle();
+      $(this).toggleClass('expanded');
+    });
+  }
 }
 
 const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
