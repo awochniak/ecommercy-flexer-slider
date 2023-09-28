@@ -36,6 +36,7 @@ function initializeConfiguration() {
     handleAddOpinionOnTabs();
     handleHideMenuOnBackgroundMousenter();
     handleVerticalMenu();
+    onProductNameClicked();
 }
 
 function setupCart() {
@@ -1017,6 +1018,12 @@ function handleBehaviourVerticalMenu() {
     $(".group-filter > h5").off('click');
     $(".group-filter > h5").next().show();
   }
+}
+
+function onProductNameClicked() {
+  $(".product-inner-wrapper .productnamewrap").click(function () {
+    window.location = $(this).parent().find("a.spanhover").attr("href");
+  });
 }
 
 const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
