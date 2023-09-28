@@ -760,12 +760,12 @@ function handleMobileFilterButton() {
         if (mobileItemBackground.css("display") == "block") {
             htmlBox.style.cssText = "overflow-y: hidden !important;";
             if (filter) {
-                leftcol.style.cssText = "display: block: !important";
+                leftcol.style.cssText = "display: block !important;";
             }
         } else {
             htmlBox.style.cssText = "overflow-y: scroll !important;";
             if (filter) {
-                leftcol.style.cssText = "display: none: !important";
+                leftcol.style.cssText = "display: none !important;";
             }
         }
     });
