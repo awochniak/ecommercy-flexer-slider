@@ -1002,18 +1002,20 @@ function handleVerticalMenu() {
 }
 
 function handleBehaviourVerticalMenu() {
-  const isMobile = window.innerWidth <= 1030;
-  const h5Elements = $(".group-filter > h5");
-  const contentElements = h5Elements.next();
-
-  contentElements.toggle(isMobile);
-  h5Elements.off('click').toggleClass('expanded', false);
-
-  if (isMobile) {
-    h5Elements.on('click', function () {
+  if (window.innerWidth <= 1030) {
+    $(".group-filter > h5").next().hide();
+    $(".group-filter > h5").on('click', function () {
       $(this).next().toggle();
-      $(this).toggleClass('expanded');
+
+      if ($(this).hasClass('expanded')) {
+        $(this).removeClass('expanded');
+      } else {
+        $(this).addClass('expanded');
+      }
     });
+  } else {
+    $(".group-filter > h5").off('click');
+    $(".group-filter > h5").next().show();
   }
 }
 
