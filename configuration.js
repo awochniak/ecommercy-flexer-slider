@@ -753,12 +753,20 @@ function handleMobileFilterButton() {
         mobileItemBackground.toggle();
         $("#box_filter").toggle()
 
+        const htmlBox = document.querySelector("html");
+        const leftcol = document.querySelector(".leftcol");
+        const filter = document.querySelector(".leftcol #box_filter");
+
         if (mobileItemBackground.css("display") == "block") {
-            const htmlBox = document.querySelector("html");
             htmlBox.style.cssText = "overflow-y: hidden !important;";
+            if (filter) {
+                leftcol.style.cssText = "display: block: !important;
+            }
         } else {
-            const htmlBox = document.querySelector("html");
             htmlBox.style.cssText = "overflow-y: scroll !important;";
+            if (filter) {
+                leftcol.style.cssText = "display: none: !important;
+            }
         }
     });
 
