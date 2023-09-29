@@ -1022,7 +1022,7 @@ function handleBehaviourVerticalMenu() {
 
 function onProductNameClicked() {
   $(".product-inner-wrapper .productnamewrap").click(function () {
-    window.location = $(this).parent().find("a.spanhover").attr("href");
+    window.location = $(this).parent().find(">a:first-of-type").attr("href");
   });
 }
 
