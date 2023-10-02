@@ -283,6 +283,26 @@ function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
         ul.appendChild(li);
     });
 
+    if (level == 0) {
+        var li = document.createElement("li");
+        var a = document.createElement("a");
+
+        a.href = `/pl/mnew`;
+        a.textContent = category.name;
+        a.classList = "mobile-menu-item"
+
+        li.appendChild(a);
+
+        var li2 = document.createElement("li");
+        var a2 = document.createElement("a");
+
+        a2.href = `/pl/mnew`;
+        a2.textContent = category.name;
+        a2.classList = "mobile-menu-item"
+
+        li2.appendChild(a2);
+    }
+    
     return ul;
 }
 
