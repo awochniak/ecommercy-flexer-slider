@@ -252,17 +252,34 @@ function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
 
     // Create an h1 element
     var a = document.createElement("a");
-    a.classList = "title-menu"
+    a.classList = "title-menu";
     a.href = h1Url;
     a.textContent = h1Text;
 
     // Create a button element
     var button = document.createElement("button");
-    button.classList = "mobile-menu-back"
+    button.classList = "mobile-menu-back";
     button.textContent = buttonText;
 
     ul.appendChild(button);
     ul.appendChild(a);
+
+    // Add two static items at level 0
+    var staticItem1 = document.createElement("li");
+    var staticLink1 = document.createElement("a");
+    staticLink1.href = "/static-url-1"; // Replace with your desired URL
+    staticLink1.textContent = "Static Item 1";
+    staticLink1.classList = "mobile-menu-item";
+    staticItem1.appendChild(staticLink1);
+    ul.appendChild(staticItem1);
+
+    var staticItem2 = document.createElement("li");
+    var staticLink2 = document.createElement("a");
+    staticLink2.href = "/static-url-2"; // Replace with your desired URL
+    staticLink2.textContent = "Static Item 2";
+    staticLink2.classList = "mobile-menu-item";
+    staticItem2.appendChild(staticLink2);
+    ul.appendChild(staticItem2);
 
     categories.forEach(category => {
         var li = document.createElement("li");
@@ -270,7 +287,7 @@ function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
 
         a.href = `/pl/c/${category.name}/${category.id}`;
         a.textContent = category.name;
-        a.classList = "mobile-menu-item"
+        a.classList = "mobile-menu-item";
 
         li.appendChild(a);
 
@@ -281,7 +298,7 @@ function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
 
         ul.appendChild(li);
     });
-    
+
     return ul;
 }
 
