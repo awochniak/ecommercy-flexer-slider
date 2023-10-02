@@ -264,23 +264,6 @@ function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
     ul.appendChild(button);
     ul.appendChild(a);
 
-    // Add two static items at level 0
-    var staticItem1 = document.createElement("li");
-    var staticLink1 = document.createElement("a");
-    staticLink1.href = "/static-url-1"; // Replace with your desired URL
-    staticLink1.textContent = "Static Item 1";
-    staticLink1.classList = "mobile-menu-item";
-    staticItem1.appendChild(staticLink1);
-    ul.appendChild(staticItem1);
-
-    var staticItem2 = document.createElement("li");
-    var staticLink2 = document.createElement("a");
-    staticLink2.href = "/static-url-2"; // Replace with your desired URL
-    staticLink2.textContent = "Static Item 2";
-    staticLink2.classList = "mobile-menu-item";
-    staticItem2.appendChild(staticLink2);
-    ul.appendChild(staticItem2);
-
     categories.forEach(category => {
         var li = document.createElement("li");
         var a = document.createElement("a");
@@ -298,6 +281,23 @@ function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
 
         ul.appendChild(li);
     });
+
+    // Add two static items at the end
+    var staticItem1 = document.createElement("li");
+    var staticLink1 = document.createElement("a");
+    staticLink1.href = "/pl/new";
+    staticLink1.textContent = templateConfiguration.translation.newProducts;
+    staticLink1.classList = "mobile-menu-item";
+    staticItem1.appendChild(staticLink1);
+    ul.appendChild(staticItem1);
+
+    var staticItem2 = document.createElement("li");
+    var staticLink2 = document.createElement("a");
+    staticLink2.href = "/pl/promotions";
+    staticLink2.textContent = templateConfiguration.translation.promotions;
+    staticLink2.classList = "mobile-menu-item";
+    staticItem2.appendChild(staticLink2);
+    ul.appendChild(staticItem2);
 
     return ul;
 }
