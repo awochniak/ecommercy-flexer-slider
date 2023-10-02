@@ -3,7 +3,6 @@ function initializeConfiguration() {
     setupMegamenu()
     setupMobileMenu()
     setupExtraMessages();
-    // setupCombinedOffersAndNewProducts();
     setupSEOs();
     setupItemCountModifiers();
 
@@ -323,16 +322,6 @@ function setupExtraMessages() {
         currentShownExtraMessageIndex = (currentShownExtraMessageIndex + 1) % $(".extra-message").length
         $(".extra-message").css("display", "none").eq(currentShownExtraMessageIndex).css("display", "block")
     }, templateConfiguration.extraMessageAutoChangeAfter);
-}
-
-function setupCombinedOffersAndNewProducts() {
-    if (!$("body").hasClass("shop_index")) return;
-
-    const targetContainer = $("<div>", { id: "offers-new-wrapper" })
-        .append($("#box_productoftheday"))
-        .append($("#box_lastadded"));
-
-    $(".main.row .centercol").prepend(targetContainer);
 }
 
 function setupSEOs() {
