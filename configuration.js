@@ -287,8 +287,8 @@ function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
         var li = document.createElement("li");
         var a = document.createElement("a");
 
-        a.href = `/pl/mnew`;
-        a.textContent = category.name;
+        a.href = `/pl/new`;
+        a.textContent = templateConfiguration.translation.newProducts;
         a.classList = "mobile-menu-item"
 
         li.appendChild(a);
@@ -296,8 +296,8 @@ function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
         var li2 = document.createElement("li");
         var a2 = document.createElement("a");
 
-        a2.href = `/pl/mnew`;
-        a2.textContent = category.name;
+        a2.href = `/pl/promotions`;
+        a2.textContent = templateConfiguration.translation.promotions;
         a2.classList = "mobile-menu-item"
 
         li2.appendChild(a2);
