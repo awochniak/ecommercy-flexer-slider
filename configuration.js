@@ -228,8 +228,10 @@ function appendSwipeableMobileMenu() {
 
     currentLevel--;
     const currentMenu = $(this).parent();
+    const prevMenu = $(this).parent().parent().parent();
     mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
     currentMenu.css("display", "none");
+    prevMenu.css("overflow", "scroll");
   });
 
   $(".mobile-menu-item").on("click", function (e) {
@@ -240,7 +242,9 @@ function appendSwipeableMobileMenu() {
       currentLevel++;
       e.preventDefault();
       const nextMenu = $(this).parent().find(">ul");
+      const prevMenu = $(this).parent().parent();
       nextMenu.css("display", "block");
+      prevMenu.css("overflow", "visible");
       mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
     }
   });
