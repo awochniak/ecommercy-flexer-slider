@@ -476,6 +476,15 @@ function setupProductInfoPager() {
             document.querySelector("#box_productdata").style.cssText =
               "display: block !important";
             break;
+          case "bundle-btn":
+            document
+              .querySelectorAll(".product-modules > div")
+              .forEach((element) => {
+                element.style.cssText = "display: none !important";
+              });
+            document.querySelector("#box_bundle").style.cssText =
+              "display: block !important";
+            break;
           case "comments-btn":
             document
               .querySelectorAll(".product-modules > div")
