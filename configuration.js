@@ -282,22 +282,16 @@ function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
     ul.appendChild(li);
   });
 
-  if (level == 0) {
-    var staticItem1 = document.createElement("li");
-    var staticLink1 = document.createElement("a");
-    staticLink1.href = "/pl/new";
-    staticLink1.textContent = templateConfiguration.translation.newProducts;
-    staticLink1.classList = "mobile-menu-item";
-    staticItem1.appendChild(staticLink1);
-    ul.appendChild(staticItem1);
-
-    var staticItem2 = document.createElement("li");
-    var staticLink2 = document.createElement("a");
-    staticLink2.href = "/pl/promotions";
-    staticLink2.textContent = templateConfiguration.translation.promotions;
-    staticLink2.classList = "mobile-menu-item";
-    staticItem2.appendChild(staticLink2);
-    ul.appendChild(staticItem2);
+  if (level == 0 && customMobileMenuItems) {
+    customMobileMenuItems.forEach((item) => {
+      var staticItem1 = document.createElement("li");
+      var staticLink1 = document.createElement("a");
+      staticLink1.href = item.url;
+      staticLink1.textContent = item.name;
+      staticLink1.classList = "mobile-menu-item";
+      staticItem1.appendChild(staticLink1);
+      ul.appendChild(staticItem1);
+    });
   }
 
   return ul;
