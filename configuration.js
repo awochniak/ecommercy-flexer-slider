@@ -282,7 +282,7 @@ function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
     ul.appendChild(li);
   });
 
-  if (level == 0 && customMobileMenuItems) {
+  if (level == 0 && customMobileMenuItems !== undefined) {
     customMobileMenuItems.forEach((item) => {
       var staticItem1 = document.createElement("li");
       var staticLink1 = document.createElement("a");
