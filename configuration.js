@@ -523,7 +523,7 @@ function setupCarouselProductPageHandler(itemCountsByResolution) {
 
   if (!prevImage || !nextImage) return;
 
-  if (links.length <= itemCountsByResolution.default) {
+  if (links.length <= getCounterForResolution(window.innerWidth, itemCountsByResolution);) {
     prevImage.style.display = "none";
     nextImage.style.display = "none";
     return;
