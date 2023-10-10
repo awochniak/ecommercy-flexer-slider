@@ -505,17 +505,16 @@ function setupProductMainImage() {
   if (!productFull) return;
 
   const productFullClassList = Array.from(productFull.classList);
-
   if (productFullClassList.includes("horizontal-miniatures")) {
-    setupCarouselProductPageHandler(4, 4);
+    setupCarouselProductPageHandler({default: 4});
   } else if (productFullClassList.includes("carousel")) {
-    setupCarouselProductPageHandler(1, 1);
+    setupCarouselProductPageHandler({default: 4});
   } else {
-    setupCarouselProductPageHandler(2, 3);
+    setupCarouselProductPageHandler({ default: 2, "0-979": 3 });
   }
 }
 
-function setupCarouselProductPageHandler(itemsPerPage, itemsPerPageMobile) {
+function setupCarouselProductPageHandler(itemCountsByResolution) {
   const prevImage = $(".prev-image")[0];
   const nextImage = $(".next-image")[0];
   const links = $(".smallgallery a");
@@ -524,25 +523,37 @@ function setupCarouselProductPageHandler(itemsPerPage, itemsPerPageMobile) {
 
   if (!prevImage || !nextImage) return;
 
-  if (links.length <= itemsPerPage) {
+  if (links.length <= itemCountsByResolution.default) {
     prevImage.style.display = "none";
     nextImage.style.display = "none";
     return;
   }
 
   $(prevImage).on("click", () => {
-    const counter = window.innerWidth < 980 ? itemsPerPageMobile : itemsPerPage
+    const resolution = window.innerWidth;
+    const counter = getCounterForResolution(resolution, itemCountsByResolution);
     currentStartIndex = Math.max(currentStartIndex - 1, 0);
     showLinks(links, currentStartIndex, counter);
   });
 
   $(nextImage).on("click", () => {
-    const counter = window.innerWidth < 980 ? itemsPerPageMobile : itemsPerPage
+    const resolution = window.innerWidth;
+    const counter = getCounterForResolution(resolution, itemCountsByResolution);
     if (currentStartIndex + counter <= links.length - 1) {
       currentStartIndex++;
     }
     showLinks(links, currentStartIndex, counter);
   });
+
+  function getCounterForResolution(resolution, itemCountsByResolution) {
+    for (const [range, count] of Object.entries(itemCountsByResolution)) {
+      const [min, max] = range.split('-').map(Number);
+      if (resolution >= min && (max === undefined || resolution <= max)) {
+        return count;
+      }
+    }
+    return itemCountsByResolution.default;
+  }
 }
 
 function showLinks(links, startIndex, itemsPerPage) {
