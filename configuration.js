@@ -506,7 +506,7 @@ function setupProductMainImage() {
 
   const productFullClassList = Array.from(productFull.classList);
   if (productFullClassList.includes("horizontal-miniatures")) {
-    setupCarouselProductPageHandler({default: 4});
+    setupCarouselProductPageHandler({default: 4, "1680-": 6});
   } else if (productFullClassList.includes("carousel")) {
     setupCarouselProductPageHandler({default: 4});
   } else {
