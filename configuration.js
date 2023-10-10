@@ -505,59 +505,42 @@ function setupProductMainImage() {
   if (!productFull) return;
 
   const productFullClassList = Array.from(productFull.classList);
-  if (productFullClassList.includes("horizontal-miniatures")) {
-    setupCarouselProductPageHandler({default: 4, "1680-": 6});
+ if (productFullClassList.includes("horizontal-miniatures")) {
+    setupCarouselProductPageHandler(4, 4);
   } else if (productFullClassList.includes("carousel")) {
-    setupCarouselProductPageHandler({default: 4});
+    setupCarouselProductPageHandler(1, 1);
   } else {
-    setupCarouselProductPageHandler({ default: 2, "0-979": 3 });
+    setupCarouselProductPageHandler(2, 3);
   }
 }
 
-function setupCarouselProductPageHandler(itemCountsByResolution) {
+function setupCarouselProductPageHandler(itemsPerPage, itemsPerPageMobile) {
   const prevImage = $(".prev-image")[0];
   const nextImage = $(".next-image")[0];
   const links = $(".smallgallery a");
-
   let currentStartIndex = 0;
 
   if (!prevImage || !nextImage) return;
 
-  if (links.length <= getCounterForResolution(window.innerWidth, itemCountsByResolution)) {
+  if (links.length <= itemsPerPage) {
     prevImage.style.display = "none";
     nextImage.style.display = "none";
     return;
   }
 
   $(prevImage).on("click", () => {
-    const resolution = window.innerWidth;
-    const counter = getCounterForResolution(resolution, itemCountsByResolution);
+    const counter = window.innerWidth < 980 ? itemsPerPageMobile : itemsPerPage
     currentStartIndex = Math.max(currentStartIndex - 1, 0);
     showLinks(links, currentStartIndex, counter);
   });
 
   $(nextImage).on("click", () => {
-    const resolution = window.innerWidth;
-    const counter = getCounterForResolution(resolution, itemCountsByResolution);
+    const counter = window.innerWidth < 980 ? itemsPerPageMobile : itemsPerPage
     if (currentStartIndex + counter <= links.length - 1) {
       currentStartIndex++;
     }
     showLinks(links, currentStartIndex, counter);
   });
-
-   function getCounterForResolution(resolution, itemCountsByResolution) {
-    for (const [range, count] of Object.entries(itemCountsByResolution)) {
-      const [min, max] = range.split('-').map(Number);
-      if (max === undefined) {
-        if (resolution >= min) {
-          return count;
-        }
-      } else if (resolution >= min && (max === 0 || resolution <= max)) {
-        return count;
-      }
-    }
-    return 0; // Default to 0 if no matching resolution is found
-  }
 }
 
 function showLinks(links, startIndex, itemsPerPage) {
