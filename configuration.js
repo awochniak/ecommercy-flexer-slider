@@ -545,14 +545,18 @@ function setupCarouselProductPageHandler(itemCountsByResolution) {
     showLinks(links, currentStartIndex, counter);
   });
 
-  function getCounterForResolution(resolution, itemCountsByResolution) {
+   function getCounterForResolution(resolution, itemCountsByResolution) {
     for (const [range, count] of Object.entries(itemCountsByResolution)) {
       const [min, max] = range.split('-').map(Number);
-      if (resolution >= min && (max === undefined || resolution <= max)) {
+      if (max === undefined) {
+        if (resolution >= min) {
+          return count;
+        }
+      } else if (resolution >= min && (max === 0 || resolution <= max)) {
         return count;
       }
     }
-    return itemCountsByResolution.default;
+    return 0; // Default to 0 if no matching resolution is found
   }
 }
 
