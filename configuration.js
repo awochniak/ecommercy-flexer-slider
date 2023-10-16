@@ -590,15 +590,27 @@ function setupMenuExpander() {
 }
 
 function setIconsOnChildfulMenuItems() {
-  const categories = frontAPI.getCategories({ lang: templateConfiguration.lang });
-  $.each(categories, function (index, category) {
-    if (category.children.length > 0) {
-      const categoryContainer = $(`#category_${category.id} > a`);
-      if (categoryContainer.length) {
-        categoryContainer.addClass("expandable");
-      }
-    }
+  const allCategories = frontAPI.getCategoryList({
+    lang: templateConfiguration.lang,
+    urlParams: '?limit=50'
   });
+
+  for (let i = 1; i <= allCategories.pages; i++) {
+    const paginated = frontAPI.getCategoryList({
+      lang: templateConfiguration.lang,
+      urlParams: '?limit=50&page=' + i
+    });
+
+
+    $.each(paginated.list, function (index, category) {
+      if (category.has_children) {
+        const categoryContainer = $(`#category_${category.category_id} > a`);
+        if (categoryContainer.length) {
+          categoryContainer.addClass("expandable");
+        }
+      }
+    });
+  }
 }
 
 var isSearchOpened = false;
