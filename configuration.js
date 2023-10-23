@@ -191,11 +191,11 @@ function setupMobileMenu() {
       $(".fa-align-justify").on("click", function (e) {
         e.preventDefault()
         $(".swipeable-mobile-menu").toggle()
-        if ($(".mobile-items-background").css('display') === "none") {
+       // if ($(".mobile-items-background").css('display') === "none") {
           $(".mobile-items-background").show();
-        } else {
-          $(".mobile-items-background").hide();
-        }
+       // } else {
+        //  $(".mobile-items-background").hide();
+       // }
       })
       break;
 
