@@ -406,7 +406,7 @@ function setupSiteCartActionListeners() {
     siteBasket.style.right = siteBasketOffset;
     background.style.opacity = 0;
     background.style.height = 0;
-    menu.style.zIndex = 25;
+    menu.style.zIndex = 24;
   });
 
   $(basket).on("click", function (e) {
