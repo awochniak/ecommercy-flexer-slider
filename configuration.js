@@ -486,12 +486,13 @@ function setupProductInfoPager() {
               "display: block !important";
             break;
           case "comments-btn":
+            const commentsId = templateConfiguration.commentsContainerId !== undefined ? templateConfiguration.commentsContainerId : "#box_productcomments"
             document
               .querySelectorAll(".product-modules > div")
               .forEach((element) => {
                 element.style.cssText = "display: none !important";
               });
-            document.querySelector("#box_productcomments").style.cssText =
+            document.querySelector(commentsId).style.cssText =
               "display: block !important";
             break;
         }
