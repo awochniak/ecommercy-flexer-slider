@@ -989,19 +989,16 @@ function setupShippingIcons() {
 }
 
 function observeProductChanges() {
-  const containers = document.querySelectorAll('.right.basket');
-
-  containers.forEach((container) => {
-    const observer = new MutationObserver(observeProduct);
-    const config = { attributes: true, childList: true, subtree: true };
-    observer.observe(container, config);
-  });
+  var observer = new MutationObserver(checkForEvent);
+  observer.observe(document.body, { subtree: true, childList: true });
 }
 
-function observeProduct(mutationsList, observer) {
-  mutationsList.forEach((mutation) => {
-    $(".ajax-product-block .btn.left").click(() => window.location.reload())
-  });
+function checkForEvent() {
+  const productBlock = $(".ajax-product-block")
+  if ($(".ajax-product-block").length) {
+      $(".ajax-product-block .btn.left").click(() => window.location.reload())
+      $(".modal-header .modal-close").click(() => window.location.reload())
+  }
 }
 
 function handleAddOpinionOnTabs() {
