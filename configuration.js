@@ -414,7 +414,6 @@ function setupSiteCartActionListeners() {
     siteBasket.style.right = 0;
     background.style.opacity = 1;
     background.style.height = "100%";
-    menu.style.zIndex = 0;
   });
 }
 
