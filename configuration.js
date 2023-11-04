@@ -332,13 +332,13 @@ function setupExtraMessages() {
 }
 
 function setupCombinedOffersAndNewProducts() {
-    if (!$("body").hasClass("shop_index")) return;
+    // if (!$("body").hasClass("shop_index")) return;
 
-    const targetContainer = $("<div>", { id: "offers-new-wrapper" })
-        .append($("#box_productoftheday"))
-        .append($("#box_lastadded"));
+    // const targetContainer = $("<div>", { id: "offers-new-wrapper" })
+    //     .append($("#box_productoftheday"))
+    //     .append($("#box_lastadded"));
 
-    $(".main.row .centercol").prepend(targetContainer);
+    // $(".main.row .centercol").prepend(targetContainer);
 }
 
 function setupSEOs() {
