@@ -1,13 +1,28 @@
 function logExecution(func) {
-    const functionName = func.name;
-    console.log(`${functionName}: Started`);
-    const startTime = new Date().getTime();
+  const functionName = getFunctionName(func);
+  console.log(`${functionName}: Started`);
+  const startTime = new Date().getTime();
 
-    func();
+  func();
 
-    const endTime = new Date().getTime();
-    console.log(`${functionName}: Finished in ${endTime - startTime} ms`);
+  const endTime = new Date().getTime();
+  console.log(`${functionName}: Finished in ${endTime - startTime} ms`);
 }
+
+function getFunctionName(func) {
+  // Get the call stack.
+  const stack = new Error().stack;
+  if (!stack) return "UnknownFunction";
+
+  // Extract the function name.
+  const matches = stack.match(/at ([\w\d_]+)\s/);
+  if (matches && matches.length >= 2) {
+    return matches[1];
+  }
+
+  return "UnknownFunction";
+}
+
 
 function initializeConfiguration() {
     setupCart()
