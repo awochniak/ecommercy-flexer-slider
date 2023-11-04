@@ -1,28 +1,12 @@
-function logExecution(func) {
-  const functionName = getFunctionName(func);
-  console.log(`${functionName}: Started`);
-  const startTime = new Date().getTime();
+function logExecution(name, func) {
+    console.log(`${name}: Started`);
+    const startTime = new Date().getTime();
 
-  func();
+    func();
 
-  const endTime = new Date().getTime();
-  console.log(`${functionName}: Finished in ${endTime - startTime} ms`);
+    const endTime = new Date().getTime();
+    console.log(`${name}: Finished in ${endTime - startTime} ms`);
 }
-
-function getFunctionName(func) {
-  // Get the call stack.
-  const stack = new Error().stack;
-  if (!stack) return "UnknownFunction";
-
-  // Extract the function name.
-  const matches = stack.match(/at ([\w\d_]+)\s/);
-  if (matches && matches.length >= 2) {
-    return matches[1];
-  }
-
-  return "UnknownFunction";
-}
-
 
 function initializeConfiguration() {
     setupCart()
@@ -64,7 +48,7 @@ function initializeConfiguration() {
 }
 
 function setupCart() {
-    logExecution(() => {
+    logExecution("setupCart", () => {
         const variant = templateConfiguration.cartType
         console.info(`Selected cart type: ${variant}`)
 
@@ -86,7 +70,7 @@ function setupCart() {
 }
 
 function getCheapestShippingCost() {
-    logExecution(() => {
+    logExecution("getCheapestShippingCost", () => {
         const basket = frontAPI.getBasketInfo({ lang: templateConfiguration.lang, currency: templateConfiguration.currency })
         const nonZeroCostItems = basket.shippings.filter((item) => item.cost_float > 0)
 
@@ -98,8 +82,7 @@ function getCheapestShippingCost() {
 }
 
 function setupMegamenu() {
-    logExecution(() => {
-
+    logExecution("setupMegamenu", () => {
         const variant = templateConfiguration.megamenuType
         console.info(`Selected mega menu type: ${variant}`)
 
@@ -124,7 +107,7 @@ function setupMegamenu() {
 }
 
 function injectMegamenuActionButton() {
-    logExecution(() => {
+    logExecution("injectMegamenuActionButton", () => {
         const limit = templateConfiguration.numberOfVisibleCategoryItems
         console.info(`Action button injected on menu on position: ${limit}`)
 
@@ -176,7 +159,7 @@ function addProductOfTheDaysToMegamenu() {
 }
 
 function populateProductBoxFromAPI(innerbox) {
-    logExecution(() => {
+    logExecution("populateProductBoxFromAPI", () => {
         const productPlaceholder = $(".product-placeholder").prop("outerHTML")
 
         frontAPI.getPotdProducts((potdProducts) => {
@@ -207,7 +190,7 @@ function populateProductBoxFromAPI(innerbox) {
 }
 
 function replacePlaceholders(content, data) {
-    logExecution(() => {
+    logExecution("replacePlaceholders", () => {
         for (const key in data) {
             if (data.hasOwnProperty(key)) {
                 const placeholder = new RegExp(`POTD_${key}`, "g")
@@ -219,108 +202,114 @@ function replacePlaceholders(content, data) {
 }
 
 function setupMobileMenu() {
-    const variant = templateConfiguration.mobileMenuType
-    console.info(`Selected mobile menu type: ${variant}`)
+    logExecution("setupMobileMenu", () => {
+        const variant = templateConfiguration.mobileMenuType
+        console.info(`Selected mobile menu type: ${variant}`)
 
-    switch (variant) {
-        case "horizontal":
-            appendSwipeableMobileMenu();
-            $(".fa-align-justify").off();
-            $(".fa-align-justify").on("click", function (e) {
-                e.preventDefault()
-                $(".swipeable-mobile-menu").toggle()
-                if ($(".mobile-items-background").css('display') === "none") {
-                    $(".mobile-items-background").show();
-                } else {
-                    $(".mobile-items-background").hide();
-                }
-            })
-            break;
+        switch (variant) {
+            case "horizontal":
+                appendSwipeableMobileMenu();
+                $(".fa-align-justify").off();
+                $(".fa-align-justify").on("click", function (e) {
+                    e.preventDefault()
+                    $(".swipeable-mobile-menu").toggle()
+                    if ($(".mobile-items-background").css('display') === "none") {
+                        $(".mobile-items-background").show();
+                    } else {
+                        $(".mobile-items-background").hide();
+                    }
+                })
+                break;
 
-        case "vertical":
-            break;
+            case "vertical":
+                break;
 
-        default:
-            console.warn(`Invalid mobile menu type variant: "${variant}". The variant was not applied.`)
-    }
+            default:
+                console.warn(`Invalid mobile menu type variant: "${variant}". The variant was not applied.`)
+        }
+    });
 }
 
 function appendSwipeableMobileMenu() {
-    var div = document.createElement("div");
-    div.classList.add("swipeable-mobile-menu")
-    div.appendChild(createHTMLTree(frontAPI.getCategories(), 0, templateConfiguration.translation.backToShop, templateConfiguration.translation.mobileMenuTitle, ""))
+    logExecution("appendSwipeableMobileMenu", () => {
+        var div = document.createElement("div");
+        div.classList.add("swipeable-mobile-menu")
+        div.appendChild(createHTMLTree(frontAPI.getCategories(), 0, templateConfiguration.translation.backToShop, templateConfiguration.translation.mobileMenuTitle, ""))
 
-    document.body.appendChild(div);
+        document.body.appendChild(div);
 
-    let currentLevel = 0;
-    const mobileMenu = $(".swipeable-mobile-menu");
+        let currentLevel = 0;
+        const mobileMenu = $(".swipeable-mobile-menu");
 
-    $(".mobile-menu-back").on("click", function (e) {
-        if (currentLevel === 0) {
-            mobileMenu.hide()
-            $(".mobile-items-background").hide();
-            const htmlBox = document.querySelector("html");
-            htmlBox.style.cssText = "overflow-y: scroll !important;";
-            return
-        }
+        $(".mobile-menu-back").on("click", function (e) {
+            if (currentLevel === 0) {
+                mobileMenu.hide()
+                $(".mobile-items-background").hide();
+                const htmlBox = document.querySelector("html");
+                htmlBox.style.cssText = "overflow-y: scroll !important;";
+                return
+            }
 
-        currentLevel--;
-        const currentMenu = $(this).parent();
-        mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
-        currentMenu.css("display", "none");
-    });
-
-    $(".mobile-menu-item").on("click", function (e) {
-        const pixelsFromRight = 30;
-        const clickX = e.clientX - $(this).offset().left;
-
-        if (clickX >= ($(this).width() - pixelsFromRight) && $(this).siblings().length > 0) {
-            currentLevel++;
-            e.preventDefault();
-            const nextMenu = $(this).parent().find(">ul");
-            nextMenu.css("display", "block");
+            currentLevel--;
+            const currentMenu = $(this).parent();
             mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
-        }
+            currentMenu.css("display", "none");
+        });
+
+        $(".mobile-menu-item").on("click", function (e) {
+            const pixelsFromRight = 30;
+            const clickX = e.clientX - $(this).offset().left;
+
+            if (clickX >= ($(this).width() - pixelsFromRight) && $(this).siblings().length > 0) {
+                currentLevel++;
+                e.preventDefault();
+                const nextMenu = $(this).parent().find(">ul");
+                nextMenu.css("display", "block");
+                mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
+            }
+        });
     });
 }
 
 function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
-    var ul = document.createElement("ul");
-    ul.classList.add(`mobile-level-${level}`);
+    logExecution("createHTMLTree", () => {
+        var ul = document.createElement("ul");
+        ul.classList.add(`mobile-level-${level}`);
 
-    // Create an h1 element
-    var a = document.createElement("a");
-    a.classList = "title-menu"
-    a.href = h1Url;
-    a.textContent = h1Text;
-
-    // Create a button element
-    var button = document.createElement("button");
-    button.classList = "mobile-menu-back"
-    button.textContent = buttonText;
-
-    ul.appendChild(button);
-    ul.appendChild(a);
-
-    categories.forEach(category => {
-        var li = document.createElement("li");
+        // Create an h1 element
         var a = document.createElement("a");
+        a.classList = "title-menu"
+        a.href = h1Url;
+        a.textContent = h1Text;
 
-        a.href = `/pl/c/${category.name}/${category.id}`;
-        a.textContent = category.name;
-        a.classList = "mobile-menu-item"
+        // Create a button element
+        var button = document.createElement("button");
+        button.classList = "mobile-menu-back"
+        button.textContent = buttonText;
 
-        li.appendChild(a);
+        ul.appendChild(button);
+        ul.appendChild(a);
 
-        if (category.children.length > 0) {
-            var subTree = createHTMLTree(category.children, level + 1, h1Text, category.name, `/pl/c/${category.name}/${category.id}`);
-            li.appendChild(subTree);
-        }
+        categories.forEach(category => {
+            var li = document.createElement("li");
+            var a = document.createElement("a");
 
-        ul.appendChild(li);
+            a.href = `/pl/c/${category.name}/${category.id}`;
+            a.textContent = category.name;
+            a.classList = "mobile-menu-item"
+
+            li.appendChild(a);
+
+            if (category.children.length > 0) {
+                var subTree = createHTMLTree(category.children, level + 1, h1Text, category.name, `/pl/c/${category.name}/${category.id}`);
+                li.appendChild(subTree);
+            }
+
+            ul.appendChild(li);
+        });
+
+        return ul;
     });
-
-    return ul;
 }
 
 function setupExtraMessages() {
