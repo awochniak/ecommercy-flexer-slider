@@ -1,1009 +1,1050 @@
-function logExecution(name, func) {
-    console.log(`${name}: Started`);
-    const startTime = new Date().getTime();
-
-    func();
-
-    const endTime = new Date().getTime();
-    console.log(`${name}: Finished in ${endTime - startTime} ms`);
-}
-
 function initializeConfiguration() {
-    setupCart()
-    setupMegamenu()
-    setupMobileMenu()
-    setupExtraMessages();
-    setupCombinedOffersAndNewProducts();
-    setupSEOs();
-    setupItemCountModifiers();
+  setupCart()
+  setupMegamenu()
+  setupMobileMenu()
+  setupExtraMessages();
+  setupSEOs();
+  setupItemCountModifiers();
 
-    setupSiteCartActionListeners();
-    setupViewSelectHandlers();
-    setupProductInfoPager();
-    setupProductMainImage();
+  setupSiteCartActionListeners();
+  setupViewSelectHandlers();
+  setupProductInfoPager();
+  setupProductMainImage();
 
-    changePhotoOnHover();
-    setupMenuExpander();
-    setIconsOnChildfulMenuItems();
+  changePhotoOnHover();
+  setupMenuExpander();
+  setIconsOnChildfulMenuItems();
 
-    handleSearchOnMobile();
-    handleLogoutOnClick();
-    handleMobileMenu();
-    handleBackgroundOnMobileMenuClick();
+  handleSearchOnMobile();
+  handleLogoutOnClick();
+  handleMobileMenu();
+  handleBackgroundOnMobileMenuClick();
 
-    handleProductContainerPosition();
-    handleMobileFilterButton();
-    initProductHover();
+  handleProductContainerPosition();
+  handleMobileFilterButton();
+  initProductHover();
 
-    appendProductCountOnFooterMenu();
-    renderProducts();
-    handleMobileItemsBackgroundClick();
+  appendProductCountOnFooterMenu();
+  renderProducts();
+  handleMobileItemsBackgroundClick();
 
-    setupPaymentIcons();
-    setupShippingIcons();
+  setupPaymentIcons();
+  setupShippingIcons();
 
-    observeProductChanges();
-    handleAddOpinionOnTabs();
-    handleHideMenuOnBackgroundMousenter();
+  observeProductChanges();
+  handleAddOpinionOnTabs();
+  handleHideMenuOnBackgroundMousenter();
+  handleVerticalMenu();
+  onProductNameClicked();
 }
 
 function setupCart() {
-    logExecution("setupCart", () => {
-        const variant = templateConfiguration.cartType
-        console.info(`Selected cart type: ${variant}`)
+  const variant = templateConfiguration.cartType
+  console.info(`Selected cart type: ${variant}`)
 
-        switch (variant) {
-            case "site-cart":
-                $(".basket-contain").remove();
-                $(".delivery-cost").text(getCheapestShippingCost())
-                break;
+  switch (variant) {
+    case "site-cart":
+      $(".basket-contain").remove();
+      $(".delivery-cost").text(getCheapestShippingCost())
+      break;
 
-            case "short-cart":
-                $(".basket-site-cart").hide()
-                $(".delivery-cost").text(getCheapestShippingCost())
-                break;
+    case "short-cart":
+      $(".basket-site-cart").hide()
+      $(".delivery-cost").text(getCheapestShippingCost())
+      break;
 
-            default:
-                console.warn(`Invalid basket variant: "${variant}". The variant was not applied.`)
-        }
-    })
+    default:
+      console.warn(`Invalid basket variant: "${variant}". The variant was not applied.`)
+  }
 }
 
 function getCheapestShippingCost() {
-    logExecution("getCheapestShippingCost", () => {
-        const basket = frontAPI.getBasketInfo({ lang: templateConfiguration.lang, currency: templateConfiguration.currency })
-        const nonZeroCostItems = basket.shippings.filter((item) => item.cost_float > 0)
+  const basket = frontAPI.getBasketInfo({ lang: templateConfiguration.lang, currency: templateConfiguration.currency })
+  const nonZeroCostItems = basket.shippings.filter((item) => item.cost_float > 0)
 
-        if (nonZeroCostItems.length == 0) return templateConfiguration.translation.freeDelivery
+  if (nonZeroCostItems.length == 0) return templateConfiguration.translation.freeDelivery
 
-        const cheapestItem = nonZeroCostItems.reduce((minItem, currentItem) => currentItem.cost_float < minItem.cost_float ? currentItem : minItem, nonZeroCostItems[0])
-        return cheapestItem.cost
-    })
+  const cheapestItem = nonZeroCostItems.reduce((minItem, currentItem) => currentItem.cost_float < minItem.cost_float ? currentItem : minItem, nonZeroCostItems[0])
+  return cheapestItem.cost
 }
 
 function setupMegamenu() {
-    logExecution("setupMegamenu", () => {
-        const variant = templateConfiguration.megamenuType
-        console.info(`Selected mega menu type: ${variant}`)
+  const variant = templateConfiguration.megamenuType
+  console.info(`Selected mega menu type: ${variant}`)
 
-        const allowedVariants = ["cascade", "version-1", "version-1-plus", "version-2", "version-2-plus", "version-3"]
+  const allowedVariants = ["cascade", "version-1", "version-1-plus", "version-2", "version-2-plus", "version-3"]
 
-        $(".menu").removeClass(allowedVariants.join(" "))
-        if (allowedVariants.includes(variant)) {
-            $(".menu").addClass(variant)
-        } else {
-            console.warn(`Invalid megamenu variant: "${variant}". The variant was not applied.`)
-        }
+  $(".menu").removeClass(allowedVariants.join(" "))
+  if (allowedVariants.includes(variant)) {
+    $(".menu").addClass(variant)
+  } else {
+    console.warn(`Invalid megamenu variant: "${variant}". The variant was not applied.`)
+  }
 
-        switch (variant) {
-            case "version-2":
-            case "version-2-plus":
-                injectMegamenuActionButton()
-            case "version-1-plus":
-            case "version-2-plus":
-                addProductOfTheDaysToMegamenu()
-        }
-    })
+  switch (variant) {
+    case "version-2":
+    case "version-2-plus":
+      injectMegamenuActionButton()
+    case "version-1-plus":
+    case "version-2-plus":
+      addProductOfTheDaysToMegamenu()
+  }
 }
 
 function injectMegamenuActionButton() {
-    logExecution("injectMegamenuActionButton", () => {
-        const limit = templateConfiguration.numberOfVisibleCategoryItems
-        console.info(`Action button injected on menu on position: ${limit}`)
+  const limit = templateConfiguration.numberOfVisibleCategoryItems
+  console.info(`Action button injected on menu on position: ${limit}`)
 
-        $(".submenu.level1 ul.level1 > li.parent").each(function () {
-            const level2 = $(this).find(".submenu.level2 ul.level2 > li")
-            const hideCount = level2.length - limit;
+  $(".submenu.level1 ul.level1 > li.parent").each(function () {
+    const level2 = $(this).find(".submenu.level2 ul.level2 > li")
+    const hideCount = level2.length - limit;
 
-            if (hideCount <= 0) return
+    if (hideCount <= 0) return
 
-            level2.slice(limit).hide()
+    level2.slice(limit).hide()
 
-            const expandButton = createButton("expand-menu-button", templateConfiguration.translation.expandCategory, () => {
-                expandButton.hide()
-                collapseButton.show()
-                level2.show()
-            })
-
-            const collapseButton = createButton("collapse-menu-button", templateConfiguration.translation.collapseCategory, () => {
-                collapseButton.hide()
-                expandButton.show()
-                level2.slice(limit).hide()
-            })
-
-            $(this).append(expandButton).append(collapseButton)
-        })
+    const expandButton = createButton("expand-menu-button", templateConfiguration.translation.expandCategory, () => {
+      expandButton.hide()
+      collapseButton.show()
+      level2.show()
     })
+
+    const collapseButton = createButton("collapse-menu-button", templateConfiguration.translation.collapseCategory, () => {
+      collapseButton.hide()
+      expandButton.show()
+      level2.slice(limit).hide()
+    })
+
+    $(this).append(expandButton).append(collapseButton)
+  })
 }
 
 function addProductOfTheDaysToMegamenu() {
-    return
-    setTimeout(function () {
-        console.info(`Product of the day added to list`)
-        $(".productoftheday_menu .slider-wrap").each(function () {
-            const slider = $(this)
-            slider.css("left", "0px")
+  return
+  setTimeout(function () {
+    console.info(`Product of the day added to list`)
+    $(".productoftheday_menu .slider-wrap").each(function () {
+      const slider = $(this)
+      slider.css("left", "0px")
 
-            const icons = slider.closest(".productoftheday_menu").find(".slider-nav-left, .slider-nav-right")
+      const icons = slider.closest(".productoftheday_menu").find(".slider-nav-left, .slider-nav-right")
 
-            icons.on("click", function (e) {
-                e.preventDefault()
-                const currentLeft = parseInt(slider.css("left"), 10)
-                const newLeft = isNaN(currentLeft) ? 0 : currentLeft + ($(this).hasClass("slider-nav-left") ? 280 : -280)
-                slider.css("left", newLeft + "px")
-            })
+      icons.on("click", function (e) {
+        e.preventDefault()
+        const currentLeft = parseInt(slider.css("left"), 10)
+        const newLeft = isNaN(currentLeft) ? 0 : currentLeft + ($(this).hasClass("slider-nav-left") ? 280 : -280)
+        slider.css("left", newLeft + "px")
+      })
 
-            populateProductBoxFromAPI(slider)
-        })
-    }, 500)
+      populateProductBoxFromAPI(slider)
+    })
+  }, 500)
 }
 
 function populateProductBoxFromAPI(innerbox) {
-    logExecution("populateProductBoxFromAPI", () => {
-        const productPlaceholder = $(".product-placeholder").prop("outerHTML")
+  const productPlaceholder = $(".product-placeholder").prop("outerHTML")
 
-        frontAPI.getPotdProducts((potdProducts) => {
-            const { list } = potdProducts
+  frontAPI.getPotdProducts((potdProducts) => {
+    const { list } = potdProducts
 
-            $.each(list, (index, item) => {
-                const {
-                    id: STOCK_ID,
-                    main_image: MAIN_IMAGE,
-                    category: { name: CATEGORY_NAME },
-                    producer: { name: PRODUCER_NAME },
-                    url: URL,
-                    name: NAME,
-                    price: {
-                        gross: { base: PRICE_GROSS_BASE },
-                        net: { base: PRICE_NET_BASE },
-                    },
-                } = item
+    $.each(list, (index, item) => {
+      const {
+        id: STOCK_ID,
+        main_image: MAIN_IMAGE,
+        category: { name: CATEGORY_NAME },
+        producer: { name: PRODUCER_NAME },
+        url: URL,
+        name: NAME,
+        price: {
+          gross: { base: PRICE_GROSS_BASE },
+          net: { base: PRICE_NET_BASE },
+        },
+      } = item
 
-                const readyProduct = replacePlaceholders(productPlaceholder, { STOCK_ID, MAIN_IMAGE, CATEGORY_NAME, PRODUCER_NAME, URL, NAME, PRICE_GROSS_BASE, PRICE_NET_BASE })
-                innerbox.append(readyProduct)
-            })
-        }, {
-            lang: templateConfiguration.lang,
-            currency: templateConfiguration.currency,
-        })
+      const readyProduct = replacePlaceholders(productPlaceholder, { STOCK_ID, MAIN_IMAGE, CATEGORY_NAME, PRODUCER_NAME, URL, NAME, PRICE_GROSS_BASE, PRICE_NET_BASE })
+      innerbox.append(readyProduct)
     })
+  }, {
+    lang: templateConfiguration.lang,
+    currency: templateConfiguration.currency,
+  })
 }
 
 function replacePlaceholders(content, data) {
-    logExecution("replacePlaceholders", () => {
-        for (const key in data) {
-            if (data.hasOwnProperty(key)) {
-                const placeholder = new RegExp(`POTD_${key}`, "g")
-                content = content.replace(placeholder, data[key])
-            }
-        }
-        return content
-    })
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      const placeholder = new RegExp(`POTD_${key}`, "g")
+      content = content.replace(placeholder, data[key])
+    }
+  }
+  return content
 }
 
 function setupMobileMenu() {
-    logExecution("setupMobileMenu", () => {
-        const variant = templateConfiguration.mobileMenuType
-        console.info(`Selected mobile menu type: ${variant}`)
+  const variant = templateConfiguration.mobileMenuType
+  console.info(`Selected mobile menu type: ${variant}`)
 
-        switch (variant) {
-            case "horizontal":
-                appendSwipeableMobileMenu();
-                $(".fa-align-justify").off();
-                $(".fa-align-justify").on("click", function (e) {
-                    e.preventDefault()
-                    $(".swipeable-mobile-menu").toggle()
-                    if ($(".mobile-items-background").css('display') === "none") {
-                        $(".mobile-items-background").show();
-                    } else {
-                        $(".mobile-items-background").hide();
-                    }
-                })
-                break;
-
-            case "vertical":
-                break;
-
-            default:
-                console.warn(`Invalid mobile menu type variant: "${variant}". The variant was not applied.`)
+  switch (variant) {
+    case "horizontal":
+      appendSwipeableMobileMenu();
+      $(".fa-align-justify").off();
+      $(".fa-align-justify").on("click", function (e) {
+        e.preventDefault()
+        $(".swipeable-mobile-menu").toggle()
+        if ($(".swipeable-mobile-menu").css('display') === "none") {
+          $(".mobile-items-background").hide();
+        } else {
+          $(".mobile-items-background").show();
         }
-    });
+      })
+      break;
+
+    case "vertical":
+      break;
+
+    default:
+      console.warn(`Invalid mobile menu type variant: "${variant}". The variant was not applied.`)
+  }
 }
 
 function appendSwipeableMobileMenu() {
-    logExecution("appendSwipeableMobileMenu", () => {
-        var div = document.createElement("div");
-        div.classList.add("swipeable-mobile-menu")
-        div.appendChild(createHTMLTree(frontAPI.getCategories(), 0, templateConfiguration.translation.backToShop, templateConfiguration.translation.mobileMenuTitle, ""))
+  var div = document.createElement("div");
+  div.classList.add("swipeable-mobile-menu")
+  div.appendChild(createHTMLTree(frontAPI.getCategories(), 0, templateConfiguration.translation.backToShop, templateConfiguration.translation.mobileMenuTitle, ""))
 
-        document.body.appendChild(div);
+  document.body.appendChild(div);
 
-        let currentLevel = 0;
-        const mobileMenu = $(".swipeable-mobile-menu");
+  let currentLevel = 0;
+  const mobileMenu = $(".swipeable-mobile-menu");
 
-        $(".mobile-menu-back").on("click", function (e) {
-            if (currentLevel === 0) {
-                mobileMenu.hide()
-                $(".mobile-items-background").hide();
-                const htmlBox = document.querySelector("html");
-                htmlBox.style.cssText = "overflow-y: scroll !important;";
-                return
-            }
+  $(".mobile-menu-back").on("click", function (e) {
+    if (currentLevel === 0) {
+      mobileMenu.hide()
+      $(".mobile-items-background").hide();
+      const htmlBox = document.querySelector("html");
+      htmlBox.style.cssText = "overflow-y: scroll !important;";
+      return
+    }
 
-            currentLevel--;
-            const currentMenu = $(this).parent();
-            mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
-            currentMenu.css("display", "none");
-        });
+    currentLevel--;
+    const currentMenu = $(this).parent();
+    const prevMenu = $(this).parent().parent().parent();
+    mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
+    currentMenu.css("display", "none");
+    prevMenu.css("overflow", "scroll");
+  });
 
-        $(".mobile-menu-item").on("click", function (e) {
-            const pixelsFromRight = 30;
-            const clickX = e.clientX - $(this).offset().left;
+  $(".mobile-menu-item").on("click", function (e) {
+    const pixelsFromRight = 30;
+    const clickX = e.clientX - $(this).offset().left;
 
-            if (clickX >= ($(this).width() - pixelsFromRight) && $(this).siblings().length > 0) {
-                currentLevel++;
-                e.preventDefault();
-                const nextMenu = $(this).parent().find(">ul");
-                nextMenu.css("display", "block");
-                mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
-            }
-        });
-    });
+    if (clickX >= ($(this).width() - pixelsFromRight) && $(this).siblings().length > 0) {
+      currentLevel++;
+      e.preventDefault();
+      const nextMenu = $(this).parent().find(">ul");
+      const prevMenu = $(this).parent().parent();
+      nextMenu.css("display", "block");
+      prevMenu.css("overflow", "visible");
+      mobileMenu.css('transform', `translateX(${-currentLevel * 100}%)`);
+    }
+  });
 }
 
 function createHTMLTree(categories, level, buttonText, h1Text, h1Url) {
-    logExecution("createHTMLTree", () => {
-        var ul = document.createElement("ul");
-        ul.classList.add(`mobile-level-${level}`);
+  var ul = document.createElement("ul");
+  ul.classList.add(`mobile-level-${level}`);
 
-        // Create an h1 element
-        var a = document.createElement("a");
-        a.classList = "title-menu"
-        a.href = h1Url;
-        a.textContent = h1Text;
+  // Create an h1 element
+  var a = document.createElement("a");
+  a.classList = "title-menu";
+  a.href = h1Url;
+  a.textContent = h1Text;
 
-        // Create a button element
-        var button = document.createElement("button");
-        button.classList = "mobile-menu-back"
-        button.textContent = buttonText;
+  // Create a button element
+  var button = document.createElement("button");
+  button.classList = "mobile-menu-back";
+  button.textContent = buttonText;
 
-        ul.appendChild(button);
-        ul.appendChild(a);
+  ul.appendChild(button);
+  ul.appendChild(a);
 
-        categories.forEach(category => {
-            var li = document.createElement("li");
-            var a = document.createElement("a");
+  categories.forEach(category => {
+    var li = document.createElement("li");
+    var a = document.createElement("a");
 
-            a.href = `/pl/c/${category.name}/${category.id}`;
-            a.textContent = category.name;
-            a.classList = "mobile-menu-item"
+    a.href = `/pl/c/${category.name}/${category.id}`;
+    a.textContent = category.name;
+    a.classList = "mobile-menu-item";
 
-            li.appendChild(a);
+    li.appendChild(a);
 
-            if (category.children.length > 0) {
-                var subTree = createHTMLTree(category.children, level + 1, h1Text, category.name, `/pl/c/${category.name}/${category.id}`);
-                li.appendChild(subTree);
-            }
+    if (category.children.length > 0) {
+      var subTree = createHTMLTree(category.children, level + 1, h1Text, category.name, `/pl/c/${category.name}/${category.id}`);
+      li.appendChild(subTree);
+    }
 
-            ul.appendChild(li);
-        });
+    ul.appendChild(li);
+  });
 
-        return ul;
+  if (level == 0 && typeof customMobileMenuItems !== "undefined") {
+    customMobileMenuItems.forEach((item) => {
+      var staticItem1 = document.createElement("li");
+      var staticLink1 = document.createElement("a");
+      staticLink1.href = item.url;
+      staticLink1.textContent = item.name;
+      staticLink1.classList = "mobile-menu-item";
+      staticItem1.appendChild(staticLink1);
+      ul.appendChild(staticItem1);
     });
+  }
+
+  return ul;
 }
 
 function setupExtraMessages() {
-    let currentShownExtraMessageIndex = 0;
+  let currentShownExtraMessageIndex = 0;
 
-    $(".next-message").on("click", function () {
-        currentShownExtraMessageIndex = (currentShownExtraMessageIndex + 1) % $(".extra-message").length
-        $(".extra-message").css("display", "none").eq(currentShownExtraMessageIndex).css("display", "block")
-    })
+  $(".next-message").on("click", function () {
+    currentShownExtraMessageIndex = (currentShownExtraMessageIndex + 1) % $(".extra-message").length
+    $(".extra-message").css("display", "none").eq(currentShownExtraMessageIndex).css("display", "block")
+  })
 
-    $(".prev-message").on("click", function () {
-        currentShownExtraMessageIndex = (currentShownExtraMessageIndex - 1 + $(".extra-message").length) % $(".extra-message").length
-        $(".extra-message").css("display", "none").eq(currentShownExtraMessageIndex).css("display", "block")
-    })
+  $(".prev-message").on("click", function () {
+    currentShownExtraMessageIndex = (currentShownExtraMessageIndex - 1 + $(".extra-message").length) % $(".extra-message").length
+    $(".extra-message").css("display", "none").eq(currentShownExtraMessageIndex).css("display", "block")
+  })
 
-    setInterval(function () {
-        currentShownExtraMessageIndex = (currentShownExtraMessageIndex + 1) % $(".extra-message").length
-        $(".extra-message").css("display", "none").eq(currentShownExtraMessageIndex).css("display", "block")
-    }, templateConfiguration.extraMessageAutoChangeAfter);
-}
-
-function setupCombinedOffersAndNewProducts() {
-    // if (!$("body").hasClass("shop_index")) return;
-
-    // const targetContainer = $("<div>", { id: "offers-new-wrapper" })
-    //     .append($("#box_productoftheday"))
-    //     .append($("#box_lastadded"));
-
-    // $(".main.row .centercol").prepend(targetContainer);
+  setInterval(function () {
+    currentShownExtraMessageIndex = (currentShownExtraMessageIndex + 1) % $(".extra-message").length
+    $(".extra-message").css("display", "none").eq(currentShownExtraMessageIndex).css("display", "block")
+  }, templateConfiguration.extraMessageAutoChangeAfter);
 }
 
 function setupSEOs() {
-    setupSEO("#box-seo");
-    setupSEO(".shop_product_list .categorydesc.bottom");
+  setupSEO("#box-seo");
+  setupSEO(".shop_product_list .categorydesc.bottom");
 }
 
 function setupSEO(seoBoxSelector) {
-    const seoInvisibleElements = $(".seo-invisible");
-    const seoBox = $(seoBoxSelector);
+  const seoInvisibleElements = $(".seo-invisible");
+  const seoBox = $(seoBoxSelector);
 
-    if (!seoInvisibleElements.length || !seoBox.length) return;
+  if (!seoInvisibleElements.length || !seoBox.length) return;
 
-    const expandButton = $("<button>")
-        .attr("id", "expand-button")
-        .text(templateConfiguration.translation.expandSEO)
-        .click(function () {
-            expandButton.hide();
-            collapseButton.show();
-            seoInvisibleElements.show();
-        });
+  const expandButton = $("<button>")
+    .attr("id", "expand-button")
+    .text(templateConfiguration.translation.expandSEO)
+    .click(function () {
+      expandButton.hide();
+      collapseButton.show();
+      seoInvisibleElements.show();
+    });
 
-    const collapseButton = $("<button>")
-        .attr("id", "collapse-button")
-        .text(templateConfiguration.translation.collapseSEO)
-        .click(function () {
-            collapseButton.hide();
-            expandButton.show();
-            seoInvisibleElements.hide();
-        });
+  const collapseButton = $("<button>")
+    .attr("id", "collapse-button")
+    .text(templateConfiguration.translation.collapseSEO)
+    .click(function () {
+      collapseButton.hide();
+      expandButton.show();
+      seoInvisibleElements.hide();
+    });
 
-    seoInvisibleElements.first().before(expandButton);
-    seoBox.append(collapseButton);
+  seoInvisibleElements.first().before(expandButton);
+  seoBox.append(collapseButton);
 }
 
 function setupItemCountModifiers() {
-    setupItemCountModifier(".quantity input");
-    setupItemCountModifier(".quantity_wrap input");
+  setupItemCountModifier(".quantity input");
+  setupItemCountModifier(".quantity_wrap input");
 }
 
 function setupItemCountModifier(inputSelector) {
-    const inputs = Array.from(document.querySelectorAll(inputSelector));
-    const moreButtons = Array.from(document.querySelectorAll(".more-item"));
-    const lessButtons = Array.from(document.querySelectorAll(".less-item"));
+  const inputs = Array.from(document.querySelectorAll(inputSelector));
+  const moreButtons = Array.from(document.querySelectorAll(".more-item"));
+  const lessButtons = Array.from(document.querySelectorAll(".less-item"));
 
-    function incrementValue(input) {
-        try {
-            const currentValue = Number(input.value);
-            input.value = currentValue + 1;
-            const event = new Event("change", { bubbles: true });
-            input.dispatchEvent(event);
-        } catch (error) { }
-    }
+  function incrementValue(input) {
+    try {
+      const currentValue = Number(input.value);
+      input.value = currentValue + 1;
+      const event = new Event("change", { bubbles: true });
+      input.dispatchEvent(event);
+    } catch (error) { }
+  }
 
-    function decrementValue(input) {
-        try {
-            const currentValue = Number(input.value);
-            if (currentValue > 1) {
-                input.value = currentValue - 1;
-                const event = new Event("change", { bubbles: true });
-                input.dispatchEvent(event);
-            }
-        } catch (error) { }
-    }
+  function decrementValue(input) {
+    try {
+      const currentValue = Number(input.value);
+      if (currentValue > 1) {
+        input.value = currentValue - 1;
+        const event = new Event("change", { bubbles: true });
+        input.dispatchEvent(event);
+      }
+    } catch (error) { }
+  }
 
-    moreButtons.forEach((button, index) => {
-        button.addEventListener("click", () => incrementValue(inputs[index]));
-    });
+  moreButtons.forEach((button, index) => {
+    button.addEventListener("click", () => incrementValue(inputs[index]));
+  });
 
-    lessButtons.forEach((button, index) => {
-        button.addEventListener("click", () => decrementValue(inputs[index]));
-    });
+  lessButtons.forEach((button, index) => {
+    button.addEventListener("click", () => decrementValue(inputs[index]));
+  });
 }
 
 function setupSiteCartActionListeners() {
-    const siteBasket = $(".basket-site-cart").get(0);
-    const background = $(".menu-background").get(0);
-    const menu = $(".menu").get(0);
-    const basket = $(".basket.right").get(0);
+  const siteBasket = $(".basket-site-cart").get(0);
+  const background = $(".menu-background").get(0);
+  const menu = $(".menu").get(0);
+  const basket = $(".basket.right").get(0);
 
-    if (!siteBasket || templateConfiguration.cartType != "site-cart") return;
+  if (!siteBasket || templateConfiguration.cartType != "site-cart") return;
 
-    const siteBasketOffset = window.getComputedStyle(siteBasket).getPropertyValue("right");
+  const siteBasketOffset = window.getComputedStyle(siteBasket).getPropertyValue("right");
 
-    $(siteBasket).on("mouseleave click", function () {
-        siteBasket.style.right = siteBasketOffset;
-        background.style.opacity = 0;
-        background.style.height = 0;
-        menu.style.zIndex = 25;
-    });
+  $(siteBasket).on("mouseleave click", function () {
+    siteBasket.style.right = siteBasketOffset;
+    background.style.opacity = 0;
+    background.style.height = 0;
+    menu.style.zIndex = 24;
+  });
 
-    $(basket).on("click", function (e) {
-        e.preventDefault()
-        siteBasket.style.right = 0;
-        background.style.opacity = 1;
-        background.style.height = "100%";
-        menu.style.zIndex = 0;
-    });
+  $(basket).on("click", function (e) {
+    e.preventDefault()
+    siteBasket.style.right = 0;
+    background.style.opacity = 1;
+    background.style.height = "100%";
+  });
 }
 
 function setupViewSelectHandlers() {
-    const activeTabletClass = "select-tablet-active";
-    const tablets = document.querySelectorAll(".select-tablet");
+  const activeTabletClass = "select-tablet-active";
+  const tablets = document.querySelectorAll(".select-tablet");
 
-    $(tablets).on("click", function () {
-        const selectId = this.getAttribute("select-id");
-        tablets.forEach(function (el) { el.classList.remove(activeTabletClass); });
-        this.classList.add(activeTabletClass);
-        $("#" + selectId).prop("selectedIndex", $(this).index() + 1);
-    });
+  $(tablets).on("click", function () {
+    const selectId = this.getAttribute("select-id");
+    tablets.forEach(function (el) { el.classList.remove(activeTabletClass); });
+    this.classList.add(activeTabletClass);
+    $("#" + selectId).prop("selectedIndex", $(this).index() + 1);
+  });
 }
 
 function setupProductInfoPager() {
-    const activeMenuItemTag = "active-menu-item";
-    const productsAttributeSelector = document.querySelector(
-        ".product-additional-items-menu"
-    );
-    if (!productsAttributeSelector) return;
+  const activeMenuItemTag = "active-menu-item";
+  const productsAttributeSelector = document.querySelector(
+    ".product-additional-items-menu"
+  );
+  if (!productsAttributeSelector) return;
 
-    const firstItem = productsAttributeSelector.children[0];
-    firstItem.classList.add(activeMenuItemTag);
+  const firstItem = productsAttributeSelector.children[0];
+  firstItem.classList.add(activeMenuItemTag);
 
-    Array.from(productsAttributeSelector.children).forEach((item) => {
-        item.addEventListener("click", function () {
-            document.querySelectorAll("." + activeMenuItemTag).forEach((element) => {
-                element.classList.remove(activeMenuItemTag);
-            });
-            item.classList.add(activeMenuItemTag);
+  Array.from(productsAttributeSelector.children).forEach((item) => {
+    item.addEventListener("click", function () {
+      document.querySelectorAll("." + activeMenuItemTag).forEach((element) => {
+        element.classList.remove(activeMenuItemTag);
+      });
+      item.classList.add(activeMenuItemTag);
 
-            Array.from(item.classList).forEach((className) => {
-                switch (className) {
-                    case "description-btn":
-                        document
-                            .querySelectorAll(".product-modules > div")
-                            .forEach((element) => {
-                                element.style.cssText = "display: none !important";
-                            });
-                        document.querySelector("#box_description").style.cssText =
-                            "display: block !important";
-                        break;
-                    case "shipping-btn":
-                        document
-                            .querySelectorAll(".product-modules > div")
-                            .forEach((element) => {
-                                element.style.cssText = "display: none !important";
-                            });
-                        document.querySelector("#box_productdeliveries").style.cssText =
-                            "display: block !important";
-                        break;
-                    case "attributes-btn":
-                        document
-                            .querySelectorAll(".product-modules > div")
-                            .forEach((element) => {
-                                element.style.cssText = "display: none !important";
-                            });
-                        document.querySelector("#box_productdata").style.cssText =
-                            "display: block !important";
-                        break;
-                    case "comments-btn":
-                        document
-                            .querySelectorAll(".product-modules > div")
-                            .forEach((element) => {
-                                element.style.cssText = "display: none !important";
-                            });
-                        document.querySelector("#box_productcomments").style.cssText =
-                            "display: block !important";
-                        break;
-                }
-            });
-        });
+      Array.from(item.classList).forEach((className) => {
+        switch (className) {
+          case "description-btn":
+            document
+              .querySelectorAll(".product-modules > div")
+              .forEach((element) => {
+                element.style.cssText = "display: none !important";
+              });
+            document.querySelector("#box_description").style.cssText =
+              "display: block !important";
+            break;
+          case "shipping-btn":
+            document
+              .querySelectorAll(".product-modules > div")
+              .forEach((element) => {
+                element.style.cssText = "display: none !important";
+              });
+            document.querySelector("#box_productdeliveries").style.cssText =
+              "display: block !important";
+            break;
+          case "attributes-btn":
+            document
+              .querySelectorAll(".product-modules > div")
+              .forEach((element) => {
+                element.style.cssText = "display: none !important";
+              });
+            document.querySelector("#box_productdata").style.cssText =
+              "display: block !important";
+            break;
+          case "bundle-btn":
+            document
+              .querySelectorAll(".product-modules > div")
+              .forEach((element) => {
+                element.style.cssText = "display: none !important";
+              });
+            document.querySelector("#box_bundle").style.cssText =
+              "display: block !important";
+            break;
+          case "comments-btn":
+            const commentsId = templateConfiguration.commentsContainerId !== undefined ? templateConfiguration.commentsContainerId : "#box_productcomments"
+            document
+              .querySelectorAll(".product-modules > div")
+              .forEach((element) => {
+                element.style.cssText = "display: none !important";
+              });
+            document.querySelector(commentsId).style.cssText =
+              "display: block !important";
+            break;
+        }
+      });
     });
+  });
 }
 
 function setupProductMainImage() {
-    const productFull = $("#box_productfull")[0];
-    if (!productFull) return;
+  const productFull = $("#box_productfull")[0];
+  if (!productFull) return;
 
-    const productFullClassList = Array.from(productFull.classList);
-
-    if (productFullClassList.includes("horizontal-miniatures")) {
-        setupCarouselProductPageHandler(4);
-    } else if (productFullClassList.includes("carousel")) {
-        setupCarouselProductPageHandler(1);
-    } else {
-        setupCarouselProductPageHandler(2);
-    }
+  const productFullClassList = Array.from(productFull.classList);
+ if (productFullClassList.includes("horizontal-miniatures")) {
+    setupCarouselProductPageHandler(4, 4);
+  } else if (productFullClassList.includes("carousel")) {
+    setupCarouselProductPageHandler(1, 1);
+  } else {
+    setupCarouselProductPageHandler(2, 3);
+  }
 }
 
-function setupCarouselProductPageHandler(itemsPerPage) {
-    const prevImage = $(".prev-image")[0];
-    const nextImage = $(".next-image")[0];
-    const links = $(".smallgallery a");
+function setupCarouselProductPageHandler(itemsPerPage, itemsPerPageMobile) {
+  const prevImage = $(".prev-image")[0];
+  const nextImage = $(".next-image")[0];
+  const links = $(".smallgallery a");
+  let currentStartIndex = 0;
 
-    let currentStartIndex = 0;
+  if (!prevImage || !nextImage) return;
 
-    if (!prevImage || !nextImage) return;
+  if (links.length <= itemsPerPage) {
+    prevImage.style.display = "none";
+    nextImage.style.display = "none";
+    return;
+  }
 
-    if (links.length <= itemsPerPage) {
-        prevImage.style.display = "none";
-        nextImage.style.display = "none";
-        return;
+  $(prevImage).on("click", () => {
+    const counter = window.innerWidth < 980 ? itemsPerPageMobile : itemsPerPage
+    currentStartIndex = Math.max(currentStartIndex - 1, 0);
+    showLinks(links, currentStartIndex, counter);
+  });
+
+  $(nextImage).on("click", () => {
+    const counter = window.innerWidth < 980 ? itemsPerPageMobile : itemsPerPage
+    if (currentStartIndex + counter <= links.length - 1) {
+      currentStartIndex++;
     }
-
-    $(prevImage).on("click", () => {
-        currentStartIndex = Math.max(currentStartIndex - 1, 0);
-        showLinks(links, currentStartIndex, itemsPerPage);
-    });
-
-    $(nextImage).on("click", () => {
-        if (currentStartIndex + itemsPerPage <= links.length - 1) {
-            currentStartIndex++;
-        }
-        showLinks(links, currentStartIndex, itemsPerPage);
-    });
+    showLinks(links, currentStartIndex, counter);
+  });
 }
 
 function showLinks(links, startIndex, itemsPerPage) {
-    links.each(function (idx, link) {
-        if (idx >= startIndex && idx < startIndex + itemsPerPage) {
-            $(link).css("display", "inline");
-        } else {
-            $(link).css("display", "none");
-        }
-    });
+  links.each(function (idx, link) {
+    if (idx >= startIndex && idx < startIndex + itemsPerPage) {
+      $(link).css("display", "inline");
+    } else {
+      $(link).css("display", "none");
+    }
+  });
 }
 
 function changePhotoOnHover() {
-    const thumbnailImages = $(".smallgallery a img");
-    thumbnailImages.on("mouseenter", function () {
-        $(".smallgallery a").removeClass("current");
-        $(this).parent().addClass("current");
-        const mainImage = $(".mainimg .photo");
-        mainImage.attr("src", this.src);
-    });
+  const thumbnailImages = $(".smallgallery a img");
+  thumbnailImages.on("mouseenter", function () {
+    $(".smallgallery a").removeClass("current");
+    $(this).parent().addClass("current");
+    const mainImage = $(".mainimg .photo");
+    mainImage.attr("src", this.src);
+  });
 }
 
 function setupMenuExpander() {
-    const menuItems = $('[class^="level_"]>li:has(.current)>a, li:has(.current) >a, li.current:has(ul)>a');
-    if (!menuItems.length) return;
+  const menuItems = $('[class^="level_"]>li:has(.current)>a, li:has(.current) >a, li.current:has(ul)>a');
+  if (!menuItems.length) return;
 
-    menuItems.on("click", function (e) {
-        const lowerMenu = $(this).next();
-        if (!lowerMenu.length) return;
+  menuItems.on("click", function (e) {
+    const lowerMenu = $(this).next();
+    if (!lowerMenu.length) return;
 
-        // Calculate the position of the click relative to the element
-        const clickPosition = e.clientX - $(this).offset().left;
+    // Calculate the position of the click relative to the element
+    const clickPosition = e.clientX - $(this).offset().left;
 
-        // Check if the click is within the last 24 pixels of the element
-        if (clickPosition >= $(this).outerWidth() - 24) {
-            e.preventDefault();
-            const lowerMenuHidden = lowerMenu.css("display") === "none";
-            if (lowerMenuHidden) {
-                $(this).removeClass("collapsed");
-                lowerMenu.css("display", "block");
-            } else {
-                $(this).addClass("collapsed");
-                lowerMenu.css("display", "none");
-            }
-        }
-    });
+    // Check if the click is within the last 24 pixels of the element
+    if (clickPosition >= $(this).outerWidth() - 24) {
+      e.preventDefault();
+      const lowerMenuHidden = lowerMenu.css("display") === "none";
+      if (lowerMenuHidden) {
+        $(this).removeClass("collapsed");
+        lowerMenu.css("display", "block");
+      } else {
+        $(this).addClass("collapsed");
+        lowerMenu.css("display", "none");
+      }
+    }
+  });
 }
 
 function setIconsOnChildfulMenuItems() {
-    const categories = frontAPI.getCategories({ lang: templateConfiguration.lang });
-    $.each(categories, function (index, category) {
-        if (category.children.length > 0) {
-            const categoryContainer = $(`#category_${category.id} > a`);
-            if (categoryContainer.length) {
-                categoryContainer.addClass("expandable");
-            }
-        }
+  const allCategories = frontAPI.getCategoryList({
+    lang: templateConfiguration.lang,
+    urlParams: '?limit=50'
+  });
+
+  for (let i = 1; i <= allCategories.pages; i++) {
+    const paginated = frontAPI.getCategoryList({
+      lang: templateConfiguration.lang,
+      urlParams: '?limit=50&page=' + i
     });
+
+
+    $.each(paginated.list, function (index, category) {
+      if (category.has_children) {
+        const categoryContainer = $(`#category_${category.category_id} > a`);
+        if (categoryContainer.length) {
+          categoryContainer.addClass("expandable");
+        }
+      }
+    });
+  }
 }
 
 var isSearchOpened = false;
 function handleSearchOnMobile() {
-    const searchToggle = $(".open-search");
-    const searchContainer = $(".search__container");
-    const contactHeader = $(".contact-header-container");
-    let isSearchOpened = false;
+  const searchToggle = $(".open-search");
+  const searchContainer = $(".search__container");
+  const contactHeader = $(".contact-header-container");
+  let isSearchOpened = false;
 
-    searchToggle.on("click", () => {
-        if (!isSearchOpened) {
-            searchContainer.css("display", "block");
-            contactHeader.css("display", "none");
-        } else {
-            searchContainer.css("display", "none");
-            contactHeader.css("display", "flex");
-        }
-        isSearchOpened = !isSearchOpened;
-    });
+  searchToggle.on("click", () => {
+    if (!isSearchOpened) {
+      searchContainer.css("display", "block");
+      contactHeader.css("display", "none");
+    } else {
+      searchContainer.css("display", "none");
+      contactHeader.css("display", "flex");
+    }
+    isSearchOpened = !isSearchOpened;
+  });
 }
 
 function handleLogoutOnClick() {
-    const logoutButton = $(".logout-button");
+  const logoutButton = $(".logout-button");
 
-    logoutButton.on("click", () => {
-        frontAPI.logout();
-        window.location.reload();
-    });
+  logoutButton.on("click", () => {
+    frontAPI.logout();
+    window.location.reload();
+  });
 }
 
 function handleMobileMenu() {
-    const contact = document.querySelector(".footer-menu-contact");
-    const search = document.querySelector(".footer-menu-search");
-    const account = document.querySelector(".footer-menu-account");
-    const basket = document.querySelector(".footer-menu-basket");
-    const mobileMenu = document.querySelector(".mobile-menu-items");
+  const contact = document.querySelector(".footer-menu-contact");
+  const search = document.querySelector(".footer-menu-search");
+  const account = document.querySelector(".footer-menu-account");
+  const basket = document.querySelector(".footer-menu-basket");
+  const mobileMenu = document.querySelector(".mobile-menu-items");
 
-    const backButton = document.querySelector(".mobile-menu-items > button");
-    const menuItems = document.querySelectorAll(".mobile-menu-items >div");
+  const backButton = document.querySelector(".mobile-menu-items > button");
+  const menuItems = document.querySelectorAll(".mobile-menu-items >div");
 
-    backButton.addEventListener("click", () => {
-        mobileMenu.style.display = "none";
-        const searchContainer = document.querySelector(".search__container");
-        searchContainer.style.display = "none";
-        $(".mobile-items-background").hide();
-        const htmlBox = document.querySelector("html");
-        htmlBox.style.cssText = "overflow-y: scroll !important;";
-        $(".search__container").hide();
-    });
+  backButton.addEventListener("click", () => {
+    mobileMenu.style.display = "none";
+    const searchContainer = document.querySelector(".search__container");
+    searchContainer.style.display = "none";
+    $(".mobile-items-background").hide();
+    const htmlBox = document.querySelector("html");
+    htmlBox.style.cssText = "overflow-y: scroll !important;";
+    $(".search__container").hide();
+  });
 
-    $(".basket-site-cart button").on('click', function () {
-        if (window.innerWidth > 1300) {
-            $(".basket-site-cart").get(0).trigger("mouseleave");
-            return
-        }
+  $(".basket-site-cart button").on('click', function () {
+    if (window.innerWidth > 1300) {
+      $(".basket-site-cart").get(0).trigger("mouseleave");
+      return
+    }
 
-        mobileMenu.style.display = "none";
-        const basketContainer = document.querySelector(".basket-site-cart");
-        basketContainer.style.cssText = "display: none !important;";
-        $(".mobile-items-background").hide();
-        const htmlBox = document.querySelector("html");
-        htmlBox.style.cssText = "overflow-y: scroll !important;";
-        $(".search__container").hide();
-    })
+    mobileMenu.style.display = "none";
+    const basketContainer = document.querySelector(".basket-site-cart");
+    basketContainer.style.cssText = "display: none !important;";
+    $(".mobile-items-background").hide();
+    const htmlBox = document.querySelector("html");
+    htmlBox.style.cssText = "overflow-y: scroll !important;";
+    $(".search__container").hide();
+  })
 
-    contact.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-contact", false, false));
-    search.addEventListener("click", () => {
-        onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-search", true, false)
-        $(".search__container").show();
-    });
-    account.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-profile", false, false));
-    basket.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-basket", false, true));
+  contact.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-contact", false, false));
+  search.addEventListener("click", () => {
+    onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-search", true, false)
+    $(".search__container").show();
+  });
+  account.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-profile", false, false));
+  basket.addEventListener("click", () => onMobileItemClicked(mobileMenu, menuItems, ".mobile-menu-basket", false, true));
 }
 
 function onMobileItemClicked(mobileMenu, menuItems, selector, isSearchContainer, isBasketContainer) {
-    $(".search__container").hide();
-    $(".mobile-items-background").show();
-    const htmlBox = document.querySelector("html");
-    htmlBox.style.cssText = "overflow-y: hidden !important;";
+  $(".search__container").hide();
+  $(".mobile-items-background").show();
+  const htmlBox = document.querySelector("html");
+  htmlBox.style.cssText = "overflow-y: hidden !important;";
 
-    $(".swipeable-mobile-menu").hide();
-    $("#box_filter").hide();
+  $(".swipeable-mobile-menu").hide();
+  $("#box_filter").hide();
 
-    mobileMenu.style.display = "block";
-    Array.from(menuItems).forEach((element) => { element.style.display = "none"; });
-    document.querySelector(selector).style.display = "flex";
+  mobileMenu.style.display = "block";
+  Array.from(menuItems).forEach((element) => { element.style.display = "none"; });
+  document.querySelector(selector).style.display = "flex";
 
-    const searchContainer = document.querySelector(".search__container");
-    searchContainer.style.display = isSearchContainer ? "block" : "none";
+  const searchContainer = document.querySelector(".search__container");
+  searchContainer.style.display = isSearchContainer ? "block" : "none";
 
-    const basketContainer = document.querySelector(".basket-site-cart");
-    basketContainer.style.cssText = isBasketContainer ? "display: block !important;" : "display: none !important;";
+  const basketContainer = document.querySelector(".basket-site-cart");
+  basketContainer.style.cssText = isBasketContainer ? "display: block !important;" : "display: none !important;";
 }
 
 function handleBackgroundOnMobileMenuClick() {
-    const menuIcon = document.querySelector(".fa-align-justify");
-    const mobileMenu = document.querySelector(".mobile-menu-items");
-    const boxFilter = document.querySelector("#box_filter");
-    const html = document.querySelector("html");
+  const menuIcon = document.querySelector(".fa-align-justify");
+  const mobileMenu = document.querySelector(".mobile-menu-items");
+  const boxFilter = document.querySelector("#box_filter");
+  const html = document.querySelector("html");
 
-    menuIcon.addEventListener('click', function () {
-        const isMobileMenuVisible = window.getComputedStyle(mobileMenu).display === "block";
-        if (boxFilter) {
-            document.querySelector("#box_filter").style.display = "none";
-        }
+  menuIcon.addEventListener('click', function () {
+    const isMobileMenuVisible = window.getComputedStyle(mobileMenu).display === "block";
+    if (boxFilter) {
+      document.querySelector("#box_filter").style.display = "none";
+    }
 
-        if (isMobileMenuVisible) {
-            document.querySelector(".search__container").style.display = "none";
-            document.querySelector(".basket-site-cart").style.cssText = "display: none !important;";
-            mobileMenu.style.display = "none";
-            html.style.overflowY = "scroll";
-        } else {
-            html.style.overflowY = "hidden";
-        }
-    });
+    if (isMobileMenuVisible) {
+      document.querySelector(".search__container").style.display = "none";
+      document.querySelector(".basket-site-cart").style.cssText = "display: none !important;";
+      mobileMenu.style.display = "none";
+      html.style.overflowY = "scroll";
+    } else {
+      html.style.overflowY = "hidden";
+    }
+  });
 }
 
 function handleProductContainerPosition() {
-    if ($(".shop_product").length == 0 || $(".with-tabs").length == 1) return
+  if ($(".shop_product").length == 0 || $(".with-tabs").length == 1) return
 
-    let isMobileView = false;
-    const productContainer = $(".product-container");
-    const productAdditionalMenuItems = $(".product-additional-items-menu");
-    const productModules = productAdditionalMenuItems.length > 0 ? productAdditionalMenuItems : $(".product-modules");
-    const originalParent = productContainer.parent();
+  let isMobileView = false;
+  const productContainer = $(".product-container");
+  const productAdditionalMenuItems = $(".product-additional-items-menu");
+  const productModules = productAdditionalMenuItems.length > 0 ? productAdditionalMenuItems : $(".product-modules");
+  const originalParent = productContainer.parent();
 
-    function setMobileView() {
-        if (innerWidth < 980 && !isMobileView) {
-            isMobileView = true;
-            productContainer.insertBefore(productModules);
-        } else if (innerWidth >= 980 && isMobileView) {
-            isMobileView = false;
-            productContainer.appendTo(originalParent);
-        }
+  function setMobileView() {
+    if (innerWidth < 980 && !isMobileView) {
+      isMobileView = true;
+      productContainer.insertBefore(productModules);
+    } else if (innerWidth >= 980 && isMobileView) {
+      isMobileView = false;
+      productContainer.appendTo(originalParent);
     }
+  }
 
+  setMobileView();
+
+  window.onresize = function (event) {
     setMobileView();
-
-    window.onresize = function (event) {
-        setMobileView();
-    };
+  };
 }
 
 function handleMobileFilterButton() {
-    const mobileFilterButton = $(".mobile-filter-button");
-    const mobileFilterMenuBack = $(".mobile-filter-menu-back");
-    const mobileItemBackground = $(".mobile-items-background");
-    const shopProductList = $(".shop_product_list");
-    if (shopProductList.length == 0) return
+  const mobileFilterButton = $(".mobile-filter-button");
+  const mobileFilterMenuBack = $(".mobile-filter-menu-back");
+  const mobileItemBackground = $(".mobile-items-background");
+  const shopProductList = $(".shop_product_list");
+  if (shopProductList.length == 0) return
 
-    document.body.addEventListener('scroll', () => {
-        const scrollY = document.body.scrollTop
-        const threshold = 100;
+  document.body.addEventListener('scroll', () => {
+    const scrollY = document.body.scrollTop
+    const threshold = 100;
 
-        mobileFilterButton.toggleClass('anchored', scrollY > threshold);
-    });
+    mobileFilterButton.toggleClass('anchored', scrollY > threshold);
+  });
 
-    document.body.addEventListener('touchmove', () => {
-        const scrollY = document.body.scrollTop();
-        const threshold = 100;
+  document.body.addEventListener('touchmove', () => {
+    const scrollY = document.body.scrollTop();
+    const threshold = 100;
 
-        mobileFilterButton.toggleClass('anchored', scrollY > threshold);
-    });
+    mobileFilterButton.toggleClass('anchored', scrollY > threshold);
+  });
 
-    mobileFilterButton.on("click", () => {
-        mobileItemBackground.toggle();
-        $("#box_filter").toggle()
+  mobileFilterButton.on("click", () => {
+    mobileItemBackground.toggle();
+    $("#box_filter").toggle()
 
-        if (mobileItemBackground.css("display") == "block") {
-            const htmlBox = document.querySelector("html");
-            htmlBox.style.cssText = "overflow-y: hidden !important;";
-        } else {
-            const htmlBox = document.querySelector("html");
-            htmlBox.style.cssText = "overflow-y: scroll !important;";
-        }
-    });
+    const htmlBox = document.querySelector("html");
+    const leftcol = document.querySelector(".leftcol");
+    const filter = document.querySelector(".leftcol #box_filter");
 
-    mobileFilterMenuBack.on("click", () => {
-        mobileItemBackground.toggle();
-        $("#box_filter").toggle()
+    if (mobileItemBackground.css("display") == "block") {
+      htmlBox.style.cssText = "overflow-y: hidden !important;";
+      if (filter) {
+        leftcol.style.cssText = "display: block !important;";
+      }
+    } else {
+      htmlBox.style.cssText = "overflow-y: scroll !important;";
+      if (filter) {
+        leftcol.style.cssText = "display: none !important;";
+      }
+    }
+  });
 
-        if (mobileItemBackground.css("display") == "block") {
-            const htmlBox = document.querySelector("html");
-            htmlBox.style.cssText = "overflow-y: hidden !important;";
-        } else {
-            const htmlBox = document.querySelector("html");
-            htmlBox.style.cssText = "overflow-y: scroll !important;";
-        }
-    });
+  mobileFilterMenuBack.on("click", () => {
+    mobileItemBackground.toggle();
+    $("#box_filter").toggle()
+
+    const htmlBox = document.querySelector("html");
+    const leftcol = document.querySelector(".leftcol");
+    const filter = document.querySelector(".leftcol #box_filter");
+
+    if (mobileItemBackground.css("display") == "block") {
+      htmlBox.style.cssText = "overflow-y: hidden !important;";
+      if (filter) {
+        leftcol.style.cssText = "display: block !important;";
+      }
+    } else {
+      htmlBox.style.cssText = "overflow-y: scroll !important;";
+      if (filter) {
+        leftcol.style.cssText = "display: none !important;";
+      }
+    }
+  });
 }
 
 function initProductHover() {
-    if (!templateConfiguration.hoverableProduct) return
+  if (!templateConfiguration.hoverableProduct) return
 
-    $(".product-inner-wrapper .boximgsize img").each(function () {
-        const hoverableProduct = $("<div class='hoverable-product-wrapper'></div>");
-        $(this).parent().append(hoverableProduct);
-    });
+  $(".product-inner-wrapper .boximgsize img").each(function () {
+    const hoverableProduct = $("<div class='hoverable-product-wrapper'></div>");
+    $(this).parent().append(hoverableProduct);
+  });
 
-    $(".product-inner-wrapper .boximgsize").on("mouseenter", function () {
-        const hoverableContainer = $(this).find(">div");
+  $(".product-inner-wrapper .boximgsize").on("mouseenter", function () {
+    const hoverableContainer = $(this).find(">div");
 
-        if (hoverableContainer.children().length === 0) {
-            const id = parseInt($(this).parent().parent().parent().attr("data-product-id"));
-            if (!isNaN(id)) {
-                const productData = frontAPI.getProduct({ id: id });
-                const productSection = $("<section></section>").attr("id", `hoverable-product-${id}`);
+    if (hoverableContainer.children().length === 0) {
+      const id = parseInt($(this).parent().parent().parent().attr("data-product-id"));
+      if (!isNaN(id)) {
+        const productData = frontAPI.getProduct({ id: id });
+        const productSection = $("<section></section>").attr("id", `hoverable-product-${id}`);
 
-                productData.options_configuration.forEach((option) => {
-                    const values = option.values;
+        productData.options_configuration.forEach((option) => {
+          const values = option.values;
 
-                    if (values.length > 0) {
-                        const optionDiv = $("<div class='hoverable-product-attr-" + option.id + "'></div>").addClass("option");
-                        const optionHeader = $("<h3></h3>").text(option.name + ":");
-                        optionDiv.append(optionHeader);
+          if (values.length > 0) {
+            const optionDiv = $("<div class='hoverable-product-attr-" + option.id + "'></div>").addClass("option");
+            const optionHeader = $("<h3></h3>").text(option.name + ":");
+            optionDiv.append(optionHeader);
 
-                        values.forEach((value) => {
-                            const optionParagraph = $("<p class='hoverable-value-" + value.id + "'></p>").text(value.name);
-                            optionParagraph.on("click", function (e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                $(this).siblings().removeClass("selected");
-                                $(this).toggleClass("selected");
-                            });
+            values.forEach((value) => {
+              const optionParagraph = $("<p class='hoverable-value-" + value.id + "'></p>").text(value.name);
+              optionParagraph.on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).siblings().removeClass("selected");
+                $(this).toggleClass("selected");
+              });
 
-                            optionDiv.append(optionParagraph);
-                        });
+              optionDiv.append(optionParagraph);
+            });
 
-                        productSection.append(optionDiv);
-                    }
-                });
+            productSection.append(optionDiv);
+          }
+        });
 
-                hoverableContainer.append(productSection);
-            }
-        }
+        hoverableContainer.append(productSection);
+      }
+    }
 
-        hoverableContainer.show();
-    });
+    hoverableContainer.show();
+  });
 
-    $(".product-inner-wrapper .boximgsize").on("mouseleave", function () {
-        $(this).find(">div").hide();
-    });
+  $(".product-inner-wrapper .boximgsize").on("mouseleave", function () {
+    $(this).find(">div").hide();
+  });
 }
 
 function appendProductCountOnFooterMenu() {
-    const maxCountVisible = templateConfiguration.maxCountVisible;
-    const basket = frontAPI.getBasketInfo({});
-    const productCount = basket.products.reduce((total, product) => total + product.quantity, 0);
-    const productCountText = productCount > maxCountVisible ? maxCountVisible + "+" : productCount.toString();
+  const maxCountVisible = templateConfiguration.maxCountVisible;
+  const basket = frontAPI.getBasketInfo({});
+  const productCount = basket.products.reduce((total, product) => total + product.quantity, 0);
+  const productCountText = productCount > maxCountVisible ? maxCountVisible + "+" : productCount.toString();
 
-    if (productCount > 0) {
-        $(".counts-product-footer").text(productCountText)
-        $(".counts-product-footer").show()
-    }
+  if (productCount > 0) {
+    $(".counts-product-footer").text(productCountText)
+    $(".counts-product-footer").show()
+  }
 }
 
 // Function to create a product element
 function createProductElement(product) {
-    const productElement = document.createElement("div");
-    productElement.className = "product product-item row center";
+  const productElement = document.createElement("div");
+  productElement.className = "product product-item row center";
 
-    // Add your HTML structure here, using product data
-    productElement.innerHTML = `
-      <div class="product-inner-wrapper">
-              <a href="${product.url}" title="${product.name}" class="row">
-                  <span class="boximgsize row">
-                      <img src="/environment/cache/images/300_300_productGfx_${product.main_image}/Mask-Group-25.png" data-src="/environment/cache/images/300_300_productGfx_${product.main_image}/Mask-Group-25.png">
-                      <noscript>
-                          <img src="/environment/cache/images/300_300_productGfx_${product.main_image}/Mask-Group-25.png" alt="${product.name}">
-                      </noscript>
-                  </span>
-                  <div class="manufacturer row">
-                      <span>${product.producer.name}</span>
-                  </div>
-                  <div class="productnamewrap row">
-                      <span class="productname">${product.name}</span>
-                  </div>
-              </a>
-              <div class="price price_extended row">
-                  <section>
-                      <p>
-                          <em>${product.price.gross.base}</em>
-                      </p>
-                  </section>
-                  <span class="hide price-netto">
-                      <p>
-                          <em>${product.price.net.base}</em>
-                      </p>
-                  </span>
-              </div>
-              <a href="${window.location.href}pl/fav/add/${product.stockId}">
-              <img class="add-to-fav" src="${templateConfiguration.templatePath}/images/user/add-to-fav.svg">
-              </a>
-              <form class="basket basket-box " action="/pl/basket/add/post" method="post">
-                  <fieldset>
-                      <div class="shaded_inputwrap"><input name="quantity" value="1" type="text" class="short center"></div>
-                      <span class="unit">szt.</span>
-                      <input type="hidden" value="${product.stockId}" name="stock_id">
-                      <button class="addtobasket btn btn-red" type="submit">
-                      <img src="/libraries/images/1px.gif" alt="" class="px1">
-                      </button>
-                  </fieldset>
-              </form>
-          </div>
-      </div>
-  `;
+  // Add your HTML structure here, using product data
+  productElement.innerHTML = `
+    <div class="product-inner-wrapper">
+            <a href="${product.url}" title="${product.name}" class="row">
+                <span class="boximgsize row">
+                    <img src="/environment/cache/images/300_300_productGfx_${product.main_image}/Mask-Group-25.png" data-src="/environment/cache/images/300_300_productGfx_${product.main_image}/Mask-Group-25.png">
+                    <noscript>
+                        <img src="/environment/cache/images/300_300_productGfx_${product.main_image}/Mask-Group-25.png" alt="${product.name}">
+                    </noscript>
+                </span>
+                <div class="manufacturer row">
+                    <span>${product.producer.name}</span>
+                </div>
+                <div class="productnamewrap row">
+                    <span class="productname">${product.name}</span>
+                </div>
+            </a>
+            <div class="price price_extended row">
+                <section>
+                    <p>
+                        <em>${product.price.gross.base}</em>
+                    </p>
+                </section>
+                <span class="hide price-netto">
+                    <p>
+                        <em>${product.price.net.base}</em>
+                    </p>
+                </span>
+            </div>
+            <a href="${window.location.href}pl/fav/add/${product.stockId}">
+            <img class="add-to-fav" src="${templateConfiguration.templatePath}/images/user/add-to-fav.svg">
+            </a>
+            <form class="basket basket-box " action="/pl/basket/add/post" method="post">
+                <fieldset>
+                    <div class="shaded_inputwrap"><input name="quantity" value="1" type="text" class="short center"></div>
+                    <span class="unit">szt.</span>
+                    <input type="hidden" value="${product.stockId}" name="stock_id">
+                    <button class="addtobasket btn btn-red" type="submit">
+                    <img src="/libraries/images/1px.gif" alt="" class="px1">
+                    </button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+`;
 
-    return productElement;
+  return productElement;
 }
 
 // Function to render products
 function renderProducts() {
-    const productsContainer = document.querySelectorAll(".productoftheday_menu .slider-content");
-    const products = frontAPI.getPotdProducts().list;
+  const productsContainer = document.querySelectorAll(".productoftheday_menu .slider-content");
+  const products = frontAPI.getPotdProducts().list;
 
-    productsContainer.forEach(productContainer => {
-        products.forEach((product) => {
-            const productElement = createProductElement(product);
-            productContainer.append(productElement);
-        });
-    })
+  productsContainer.forEach(productContainer => {
+    products.forEach((product) => {
+      const productElement = createProductElement(product);
+      productContainer.append(productElement);
+    });
+  })
 }
 
 function handleMobileItemsBackgroundClick() {
-    $(".mobile-items-background").on("click", function () {
-        $(".swipeable-mobile-menu").hide();
-        $(".mobile-menu-items").hide();
-        $("#box_filter").hide();
-        $(this).hide()
+  $(".mobile-items-background").on("click", function () {
+    $(".swipeable-mobile-menu").hide();
+    $(".mobile-menu-items").hide();
+    $("#box_filter").hide();
+    $(this).hide()
 
-        const searchContainer = document.querySelector(".search__container");
-        searchContainer.style.display = "none";
+    const searchContainer = document.querySelector(".search__container");
+    searchContainer.style.display = "none";
 
-        const basketContainer = document.querySelector(".basket-site-cart");
-        basketContainer.style.cssText = "display: none !important;";
+    const basketContainer = document.querySelector(".basket-site-cart");
+    basketContainer.style.cssText = "display: none !important;";
 
-        $(".search__container").hide();
-    });
+    $(".search__container").hide();
+  });
 }
 
 function setupPaymentIcons() {
-    if (!$(".shop_basket")) return
+  if (!$(".shop_basket")) return
 
-    templateConfiguration.paymentsConfiguration.forEach((config) => {
-        const section = $(`#${config.name}`).parent().next();
-        section.css("background-image", `url(${config.url})`);
-        section.css("padding-left", "48px");
-    });
+  templateConfiguration.paymentsConfiguration.forEach((config) => {
+    const section = $(`#${config.name}`).parent().next();
+    section.css("background-image", `url(${config.url})`);
+    section.css("padding-left", "48px");
+  });
 }
 
 function setupShippingIcons() {
-    if (!$(".shop_basket")) return
+  if (!$(".shop_basket")) return
 
-    templateConfiguration.shippingsConfiguration.forEach((config) => {
-        const section = $(`#${config.name}`).parent().next();
-        section.css("background-image", `url(${config.url})`);
-        section.css("padding-left", "48px");
-    });
+  templateConfiguration.shippingsConfiguration.forEach((config) => {
+    const section = $(`#${config.name}`).parent().next();
+    section.css("background-image", `url(${config.url})`);
+    section.css("padding-left", "48px");
+  });
 }
 
 function observeProductChanges() {
-    const containers = document.querySelectorAll('.right.basket');
-
-    containers.forEach((container) => {
-        const observer = new MutationObserver(observeProduct);
-        const config = { attributes: true, childList: true, subtree: true };
-        observer.observe(container, config);
-    });
+  var observer = new MutationObserver(checkForEvent);
+  observer.observe(document.body, { subtree: true, childList: true });
 }
 
-function observeProduct(mutationsList, observer) {
-    mutationsList.forEach((mutation) => {
-        $(".ajax-product-block .btn.left").click(() => document.location.href = "/")
-    });
+function checkForEvent() {
+  const productBlock = $(".ajax-product-block")
+  if ($(".ajax-product-block").length) {
+      $(".ajax-product-block .btn.left").click(() => window.location.reload())
+      $(".modal-header .modal-close").click(() => window.location.reload())
+  }
 }
 
 function handleAddOpinionOnTabs() {
-    $(".comment a").click(function (e) {
-        if (!$(".with-tabs")) return
+  $(".comment a").click(function (e) {
+    if (!$(".with-tabs")) return
 
-        e.preventDefault();
-        $(".comments-btn").trigger("click")
-        $('body').animate({ scrollTop: $(".comments-btn").position().top });
-    });
+    e.preventDefault();
+    $(".comments-btn").trigger("click")
+    $('body').animate({ scrollTop: $(".comments-btn").position().top });
+  });
 }
 
 function handleHideMenuOnBackgroundMousenter() {
-    $(".menu-background").on("mouseenter", function () {
-        const el = $(this)
-        el.addClass("menu-background-hidden")
-        setTimeout(() => { el.removeClass("menu-background-hidden") }, 400);
+  $(".menu-background").on("mouseenter", function () {
+    const el = $(this)
+    el.addClass("menu-background-hidden")
+    setTimeout(() => { el.removeClass("menu-background-hidden") }, 400);
+  });
+}
+
+function handleVerticalMenu() {
+  handleBehaviourVerticalMenu()
+  $(window).on('resize', handleBehaviourVerticalMenu);
+}
+
+function handleBehaviourVerticalMenu() {
+  if (window.innerWidth <= 1030) {
+    $(".group-filter > h5").next().hide();
+    $(".group-filter > h5").on('click', function () {
+      $(this).next().toggle();
+
+      if ($(this).hasClass('expanded')) {
+        $(this).removeClass('expanded');
+      } else {
+        $(this).addClass('expanded');
+      }
     });
+  } else {
+    $(".group-filter > h5").off('click');
+    $(".group-filter > h5").next().show();
+  }
+}
+
+function onProductNameClicked() {
+  $(".product-inner-wrapper .productnamewrap").click(function () {
+    window.location = $(this).parent().find(">a:first-of-type").attr("href");
+  });
 }
 
 const createButton = (className, text, clickHandler) => $("<button>", { class: className, text: text, click: clickHandler })
-setTimeout(() => $("html").css("height", "100%"), 600);
